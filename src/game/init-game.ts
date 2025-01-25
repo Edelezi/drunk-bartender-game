@@ -20,8 +20,6 @@ function makeSprite(texturePath = "", x = 0, y = 0, sx = 1, sy = 1) {
 function makeScene(x = 0, y = 0) {
     const slot = new Scene();
     pixiApp.stage.addChild(slot.container);
-    const mask = makeSprite("main/mask.png", x, y);
-    slot.container.mask = mask;
     return slot;
 }
 

@@ -13,7 +13,8 @@
     "prod": "vite build && vite preview",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "packer": "node atlaspacker.cjs"
   },
   "lint-staged": {
     "*.ts": "biome format --staged --write ./src"
@@ -23,6 +24,7 @@
     "pixi.js": "7.4.2"
   },
   "devDependencies": {
+    "free-tex-packer-core": "^0.3.4",
     "@biomejs/biome": "1.8.1",
     "husky": "8.0.3",
     "lint-staged": "15.2.7",

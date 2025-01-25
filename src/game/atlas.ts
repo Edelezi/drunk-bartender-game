@@ -4,14 +4,13 @@ import { Atlas } from "#src/pixi/atlas";
 
 let mainAtlas: Atlas;
 let slotAtlas: Atlas;
+
 const spineAnimations = {
-    arrow: null
 };
 
 export async function loadAssets() {
-    slotAtlas = await Assets.load("/assets/slot_atlases/reel.json");
-    mainAtlas = await Assets.load("/assets/slot_atlases/main.json");
-    spineAnimations.arrow = await Assets.load("/assets/spine/arrow/arrow.json");
+    slotAtlas = await Assets.load("/atlases/reel.json");
+    mainAtlas = await Assets.load("/atlases/main.json");
 }
 
 export function getSpine(name: string): Spine {
