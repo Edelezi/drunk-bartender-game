@@ -1,4 +1,4 @@
-import { Application, Sprite, BLEND_MODES } from "pixi.js";
+import { Application, Sprite, BLEND_MODES, Texture } from "pixi.js";
 import { getSpine, getTexture } from "./atlas";
 import { Spine } from "pixi-spine";
 import { pixiMove } from "#src/pixi/pixi-move";
@@ -35,6 +35,9 @@ export function initGame(app: Application) {
     const cy = 390;
 
     // makeSprite("main/bg.png", cx, cy);
+    const sprite = new Sprite(Texture.from('/bg.jpeg'));
+    pixiApp.stage.addChild(sprite);
+
     const scene = makeScene(cx, cy);
 
     const sp = new Sprite(getTexture('main/arrow.png'));
