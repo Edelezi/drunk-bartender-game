@@ -26,9 +26,11 @@ export class ClientModel {
 
 export const barSpots = 8;
 
-const clientTimeoutSignal = new Signal();
+export const clientTimeoutSignal = new Signal();
+export const clientArrivedSignal = new Signal();
+export const clientLeaveSignal = new Signal();
 
-class BarModel {
+export class BarModel {
     private _spots: (ClientModel | undefined)[] = [];
     private _timerIds: (number | undefined)[] = [];
 
@@ -44,6 +46,10 @@ class BarModel {
             throw new Error("spot is already taken");
         }
         this._spots[spot] = client;
+        clientArrivedSignal.dispatch(this, {
+            client,
+            spot
+        });
         this._timerIds[spot] = setTimeout(() => {
             this.removeClient(spot);
             clientTimeoutSignal.dispatch(this, {
@@ -59,5 +65,6 @@ class BarModel {
         }
         clearTimeout(this._timerIds[spot] as number);
         this._spots[spot] = undefined;
+        clientLeaveSignal.dispatch(this, { spot });
     }
 }

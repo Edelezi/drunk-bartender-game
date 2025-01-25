@@ -17,8 +17,9 @@ function makeSprite(texturePath = "", x = 0, y = 0, sx = 1, sy = 1) {
     return sp;
 }
 
-function makeScene(x = 0, y = 0) {
+function makeScene(_x = 0, _y = 0) {
     const slot = new Scene();
+    slot.init();
     pixiApp.stage.addChild(slot.container);
     return slot;
 }
@@ -35,7 +36,7 @@ export function initGame(app: Application) {
     const cy = 390;
 
     // makeSprite("main/bg.png", cx, cy);
-    const sprite = new Sprite(Texture.from('/bg.jpeg'));
+    const sprite = new Sprite(Texture.from("/bg.jpeg"));
     pixiApp.stage.addChild(sprite);
 
     const scene = makeScene(cx, cy);
@@ -51,7 +52,6 @@ export function initGame(app: Application) {
         scene
     };
 
-    scene.startGame();
     pixiApp.stage.addChild(scene.container);
 
     return { game };

@@ -1,7 +1,7 @@
 import { ClientModel } from "./barModel";
 import { generateClients } from "#src/helpers/gameHelpers";
 
-type LevelModel = {
+export type LevelModel = {
     clients: ClientModel[];
     minGapTime: number;
     maxGapTime: number;
