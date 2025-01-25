@@ -1,0 +1,79 @@
+{
+"skeleton": { "hash": "GqwF1tzcXgI", "spine": "4.1.24", "x": -82.2, "y": -228.57, "width": 164.39, "height": 297.13 },
+"bones": [
+	{ "name": "root" },
+	{ "name": "arrow+light", "parent": "root", "scaleX": 0.8261, "scaleY": 0.8261 },
+	{ "name": "arrow+light2", "parent": "root", "y": -40, "scaleX": 0.8261, "scaleY": 0.8261 },
+	{ "name": "arrow+light3", "parent": "root", "y": -80, "scaleX": 0.8261, "scaleY": 0.8261 },
+	{ "name": "arrow+light4", "parent": "root", "y": -120, "scaleX": 0.8261, "scaleY": 0.8261 },
+	{ "name": "arrow+light5", "parent": "root", "y": -160, "scaleX": 0.8261, "scaleY": 0.8261 }
+],
+"slots": [
+	{ "name": "arrow+light", "bone": "arrow+light", "color": "ffffffcf", "attachment": "arrow+light", "blend": "additive" },
+	{ "name": "arrow+light2", "bone": "arrow+light2", "color": "ffffffcf", "attachment": "arrow+light", "blend": "additive" },
+	{ "name": "arrow+light5", "bone": "arrow+light5", "color": "ffffffcf", "attachment": "arrow+light", "blend": "additive" },
+	{ "name": "arrow+light3", "bone": "arrow+light3", "color": "ffffffcf", "attachment": "arrow+light", "blend": "additive" },
+	{ "name": "arrow+light4", "bone": "arrow+light4", "color": "ffffffcf", "attachment": "arrow+light", "blend": "additive" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"arrow+light": {
+				"arrow+light": { "width": 199, "height": 166 }
+			},
+			"arrow+light2": {
+				"arrow+light": { "width": 199, "height": 166 }
+			},
+			"arrow+light3": {
+				"arrow+light": { "width": 199, "height": 166 }
+			},
+			"arrow+light4": {
+				"arrow+light": { "width": 199, "height": 166 }
+			},
+			"arrow+light5": {
+				"arrow+light": { "width": 199, "height": 166 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {
+		"bones": {
+			"arrow+light3": {
+				"translate": [
+					{ "y": 120 },
+					{ "time": 1, "y": 40 }
+				]
+			},
+			"arrow+light4": {
+				"translate": [
+					{ "y": 200 },
+					{ "time": 1, "y": 120 }
+				]
+			},
+			"arrow+light": {
+				"translate": [
+					{},
+					{ "time": 1, "y": -80 }
+				]
+			},
+			"arrow+light2": {
+				"translate": [
+					{},
+					{ "time": 0.5, "y": -40, "curve": "stepped" },
+					{ "time": 0.5036, "y": 160 },
+					{ "time": 1, "y": 120 }
+				]
+			},
+			"arrow+light5": {
+				"translate": [
+					{ "y": 280 },
+					{ "time": 0.5, "y": 240 },
+					{ "time": 1, "y": 200 }
+				]
+			}
+		}
+	}
+}
+}

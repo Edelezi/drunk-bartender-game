@@ -1,13 +1,31 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + Pixi + TS</title>
+  <meta name="description" content="Simple Pixi Application with Vite, GSAP and Typescript" />
+</head>
+
+<body>
+  <!-- <div id="stage"></div> -->
+  <canvas id="canvas"></canvas>
+
+  <button onclick="window.dispatchEvent(
+    new CustomEvent('spin-click', {
+      bubbles: true,
+      cancelable: true,
+    }),
+  )">Click me</button>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+<style>
+  body {
+    background-color: beige;
+  }
+</style>
 </html>

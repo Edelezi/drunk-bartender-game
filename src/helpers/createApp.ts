@@ -1,0 +1,45 @@
+import gsap from "gsap";
+import { Application, Ticker } from "pixi.js";
+
+// const subscribeToGSAPTicker = (app: Application) => {
+//     app.stage.removeChildren();
+//     app.ticker.stop();
+
+//     gsap.ticker.remove(() => {
+//         app.ticker.update();
+//     });
+
+//     Ticker.shared.autoStart = false;
+//     Ticker.shared.stop();
+//     Ticker.system.stop();
+
+//     gsap.ticker.add(() => {
+//         app.ticker.update();
+//     });
+// };
+
+// export const createApp = async (stage: HTMLDivElement) => {
+//     const app = new Application();
+//     await app.init({
+//         // fallback properties
+//         width: 400,
+//         height: 300,
+//         // auto resize
+//         resizeTo: stage,
+//         autoDensity: true,
+//         hello: true,
+//         antialias: false, // adjust if really needed - performance killer <= webgl 2
+//         resolution: window.devicePixelRatio || 1,
+//         sharedTicker: true,
+//         backgroundAlpha: 1,
+//         backgroundColor: 0xffffff
+//     });
+//     app.stage.sortableChildren = true;
+//     app.stage.interactive = false;
+//     app.stage.interactiveChildren = false;
+//     stage.appendChild(app.canvas);
+
+//     subscribeToGSAPTicker(app);
+
+//     return app;
+// };

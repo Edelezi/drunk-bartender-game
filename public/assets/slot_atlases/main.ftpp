@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "version": "0.6.7"
+  },
+  "savePath": "/Users/kolombet/box/axe-typescript-pixi-game/assets/atlases/main",
+  "images": [],
+  "folders": [
+    "/Users/kolombet/box/axe-typescript-pixi-game/assets/atlases/main/main"
+  ],
+  "packOptions": {
+    "textureName": "main",
+    "textureFormat": "png",
+    "removeFileExtension": false,
+    "prependFolderName": true,
+    "base64Export": false,
+    "tinify": false,
+    "tinifyKey": "",
+    "scale": 1,
+    "filter": "none",
+    "exporter": "pixi.js",
+    "fileName": "pack-result",
+    "savePath": "/Users/kolombet/box/axe-typescript-pixi-game/assets/atlases/main",
+    "width": 512,
+    "height": 512,
+    "fixedSize": false,
+    "powerOfTwo": false,
+    "padding": 5,
+    "extrude": 5,
+    "allowRotation": false,
+    "allowTrim": false,
+    "trimMode": "trim",
+    "alphaThreshold": "0",
+    "detectIdentical": true,
+    "packer": "MaxRectsBin",
+    "packerMethod": "BestShortSideFit"
+  }
+}
