@@ -1,8 +1,9 @@
-import { Application, Sprite, BLEND_MODES, Texture } from "pixi.js";
+import { Application, Sprite, BLEND_MODES, Texture, Text } from "pixi.js";
 import { getSpine, getTexture } from "./atlas";
 import { Spine } from "pixi-spine";
 import { pixiMove } from "#src/pixi/pixi-move";
 import { Scene } from "./scene";
+import { Cup } from "./cup";
 
 const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -37,6 +38,7 @@ export function initGame(app: Application) {
 
     // makeSprite("main/bg.png", cx, cy);
     const sprite = new Sprite(Texture.from("/bg.jpeg"));
+    sprite.scale.set(.8, .8);
     pixiApp.stage.addChild(sprite);
 
     const scene = makeScene(cx, cy);
@@ -53,6 +55,36 @@ export function initGame(app: Application) {
     };
 
     pixiApp.stage.addChild(scene.container);
+
+    document.body.appendChild(pixiApp.view);
+
+    const cup = new Cup({ x: 350, y: 250 });
+    pixiApp.stage.addChild(cup.graphics);
+
+    pixiApp.view.addEventListener('mousedown', () => {
+        cup.isPouring = true;
+    });
+
+    pixiApp.view.addEventListener('mouseup', () => {
+        cup.isPouring = false;
+    });
+
+    pixiApp.view.addEventListener('mouseleave', () => {
+        cup.isPouring = false;
+    });
+
+    const instructions = new Text('Hold mouse button to fill the cup', {
+        fontSize: 16,
+        fill: '#FFFFFF'
+    });
+
+    instructions.position.set(10, 10);
+    pixiApp.stage.addChild(instructions);
+
+    pixiApp.ticker.add((delta: number) => {
+        cup.update(delta);
+        cup.draw();
+    });
 
     return { game };
 }

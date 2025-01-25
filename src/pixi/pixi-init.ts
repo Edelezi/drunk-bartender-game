@@ -1,7 +1,7 @@
 import { loadAssets } from "#src/game/atlas";
-import { Application } from "pixi.js";
+import { Application, Graphics } from "pixi.js";
 
-let pixiApp: Application;
+export let pixiApp: Application;
 let canvas: HTMLCanvasElement;
 
 export async function pixiInit(c: HTMLCanvasElement): Promise<Application> {
@@ -24,6 +24,10 @@ export async function pixiInit(c: HTMLCanvasElement): Promise<Application> {
         // renderer: myRenderer,
         // stage: myStage,
     };
+
+    // @ts-ignore
+    globalThis.__PIXI_APP__ = pixiApp;
+
 
     // resize();
     // window.addEventListener("resize", () => {

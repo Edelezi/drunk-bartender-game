@@ -1,152 +1,176 @@
-import { Graphics, Matrix } from "pixi.js";
+import { pixiApp } from '#src/pixi/pixi-init';
+import * as PIXI from 'pixi.js';
 
-interface ITap {
+interface BubbleProps {
     x: number;
     y: number;
-    width: number;
-    height: number;
-    isPouring: boolean;
+    size: number;
 }
 
-interface IPointer {
+class Bubble {
+    x: number;
+    y: number;
+    size: number;
+    speed: number;
+    wobbleSpeed: number;
+    wobbleDistance: number;
+    time: number;
+
+    constructor({ x, y, size }: BubbleProps) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.speed = Math.random() * 0.5 + 0.2;
+        this.wobbleSpeed = Math.random() * 0.1;
+        this.wobbleDistance = Math.random() * 2;
+        this.time = Math.random() * Math.PI * 2;
+    }
+
+    update(cupX: number, cupWidth: number): void {
+        this.y -= this.speed;
+        this.time += this.wobbleSpeed;
+        const newX = this.x + Math.sin(this.time) * this.wobbleDistance;
+        if (newX >= cupX && newX <= cupX + cupWidth) {
+            this.x = newX;
+        }
+    }
+}
+
+interface CupProps {
     x: number;
     y: number;
 }
 
 class Cup {
-    public x: number;
-    public y: number;
-    public readonly width: number = 100;
-    public readonly height: number = 200;
-    private fillLevel: number = 50;
-    private foamLevel: number = 20;
-    private readonly maxFill: number = 180;
-    private readonly maxFoam: number = 40;
-    private angle: number = 0;
-    private time: number = 0;
-    private readonly moveSpeed: number = 0.05;
-    public gameOver: boolean = false;
-    private readonly matrix: Matrix;
-    public readonly graphics: Graphics = new Graphics();
+    liquid: number;
+    foam: number;
+    x: number;
+    y: number;
+    graphics: PIXI.Graphics;
+    width: number;
+    height: number;
+    isPouring: boolean;
+    liquidFillRate: number;
+    foamFillRate: number;
+    foamDecayRate: number;
+    bubbles: Bubble[];
+    bubbleSpawnRate: number;
 
-    constructor(x: number, y: number) {
+    constructor({ x, y }: CupProps) {
+        this.liquid = 0;
+        this.foam = 0;
         this.x = x;
         this.y = y;
-        this.graphics.name = 'cup';
-
-        const graphics = this.graphics;
-        graphics.beginFill(0x00ff00);
-        graphics.drawRect(0, 0, 50, 50);
-        graphics.endFill();
-        // seat.addChild(graphics);
-
-        this.matrix = new Matrix();
+        this.graphics = new PIXI.Graphics();
+        this.width = 60;
+        this.height = 100;
+        this.isPouring = false;
+        this.liquidFillRate = 0.4;
+        this.foamFillRate = this.liquidFillRate * (Math.random() * 1.7 + 0.3);
+        this.foamDecayRate = 0.1;
+        this.bubbles = [];
+        this.bubbleSpawnRate = 0.2;
     }
 
-    public isUnderTap(tap: ITap): boolean {
-        const tapCenter = tap.x + tap.width/2;
-        const glassCenter = this.x + this.width/2;
-        return Math.abs(tapCenter - glassCenter) < 20;
-    }
+    update(delta: number): void {
+        if (this.isPouring) {
+            const totalContent = this.liquid + this.foam;
+            if (totalContent < 100) {
+                const remainingSpace = 100 - totalContent;
+                const liquidIncrease = Math.min(remainingSpace, this.liquidFillRate);
+                const foamIncrease = Math.min(remainingSpace - liquidIncrease, this.foamFillRate);
 
-    public update(pointer: IPointer | null, screenWidth: number, screenHeight: number, tap: ITap): void {
-        if (this.gameOver) return;
-
-        this.time += 0.02;
-
-        if (pointer) {
-            this.x += (pointer.x - this.x) * this.moveSpeed;
-            this.y += (pointer.y - this.y) * this.moveSpeed;
+                this.liquid += liquidIncrease;
+                this.foam += foamIncrease;
+            }
         }
 
-        this.x = Math.max(this.width/2, Math.min(screenWidth - this.width/2, this.x));
-        this.y = Math.max(this.height/2, Math.min(screenHeight - this.height/2, this.y));
-
-        if (tap.isPouring && this.isUnderTap(tap)) {
-            if (this.fillLevel < this.maxFill) {
-                this.fillLevel += 1;
-                this.foamLevel += 0.8;
-            }
-
-            if (this.fillLevel + this.foamLevel > this.height) {
-                this.gameOver = true;
-            }
-        } else if (this.foamLevel > this.maxFoam) {
-            this.foamLevel -= 0.2;
+        if (this.foam > 4) {
+            this.foam = Math.max(4, this.foam - this.foamDecayRate * delta);
         }
 
-        const maxRotation = Math.PI / 6;
-        this.angle = Math.sin(this.time) * maxRotation;
+        if (Math.random() < this.bubbleSpawnRate && this.liquid > 0) {
+            const bubbleX = this.x + Math.random() * this.width;
+            const liquidHeight = (this.height * this.liquid) / 100;
+            const bubbleY = this.y + this.height - Math.random() * liquidHeight;
+            this.bubbles.push(new Bubble({
+                x: bubbleX,
+                y: bubbleY,
+                size: Math.random() * 2 + 1
+            }));
+        }
+
+        this.bubbles = this.bubbles.filter(bubble => {
+            bubble.update(this.x, this.width);
+            const liquidTop = this.y + this.height - (this.height * this.liquid) / 100;
+            return bubble.y > liquidTop;
+        });
     }
 
-    public draw(): void {
-        this.graphics.clear();
-        // Draw glass
-        this.graphics.lineStyle(3, 0xb2ebf2);
-        this.graphics.beginFill(0xb2ebf2, 0.2);
+    draw(): void {
+        const g = this.graphics;
+        g.clear();
 
-        this.matrix.identity()
-            .translate(-this.x - this.width/2, -this.y - this.height/2)
-            .rotate(this.angle)
-            .translate(this.x + this.width/2, this.y + this.height/2);
+        // Draw cup outline
+        g.lineStyle(2, 0x666666);
+        g.beginFill(0xFFFFFF, 0.1);
+        g.drawRect(this.x, this.y, this.width, this.height);
+        g.endFill();
 
-        this.graphics.setMatrix(this.matrix);
-        this.graphics.drawRect(
-            this.x - this.width/2,
-            this.y - this.height/2,
+        // Calculate heights
+        const liquidHeight = (this.height * this.liquid) / 100;
+        const foamHeight = (this.height * this.foam) / 100;
+
+        // Draw liquid
+        g.beginFill(0xC2853B);
+        g.drawRect(
+            this.x,
+            this.y + this.height - liquidHeight,
             this.width,
-            this.height
+            liquidHeight
         );
-        this.graphics.endFill();
+        g.endFill();
 
-        // Reset transformation
-        this.graphics.setMatrix(new Matrix());
+        // Draw bubbles
+        g.lineStyle(0);
+        this.bubbles.forEach(bubble => {
+            g.beginFill(0xFFFFFF, 0.4);
+            g.drawCircle(bubble.x, bubble.y, bubble.size);
+            g.endFill();
+        });
 
-        if (this.fillLevel > 0) {
-            this.drawLiquid(this.fillLevel, 0xf39c12);
-        }
-
-        if (this.foamLevel > 0) {
-            this.drawLiquid(this.foamLevel, 0xfff5e6, -this.fillLevel);
-        }
-    }
-
-    private drawLiquid(fillLevel: number, color: number, baseOffset: number = 0): void {
-        const halfWidth = this.width/2;
-        const halfHeight = this.height/2;
-        const liquidAngle = -this.angle * 0.7;
-        const leftOffset = Math.tan(liquidAngle) * halfHeight;
-        const rightOffset = -leftOffset;
-
-        this.graphics.beginFill(color);
-        this.graphics.moveTo(this.x - halfWidth, this.y + halfHeight);
-        this.graphics.lineTo(
-            this.x - halfWidth,
-            this.y + halfHeight - fillLevel + (leftOffset - rightOffset) + baseOffset
+        // Draw foam
+        g.beginFill(0xFFFACD, 0.8);
+        g.drawRect(
+            this.x,
+            this.y + this.height - liquidHeight - foamHeight,
+            this.width,
+            foamHeight
         );
-        this.graphics.lineTo(
-            this.x + halfWidth,
-            this.y + halfHeight - fillLevel + baseOffset
-        );
-        this.graphics.lineTo(this.x + halfWidth, this.y + halfHeight);
-        this.graphics.closePath();
-        this.graphics.endFill();
-    }
+        g.endFill();
 
-    public getFillPercentage(): number {
-        return Math.round((this.fillLevel / this.maxFill) * 100);
-    }
+        /*
+        const textBg = new PIXI.Graphics();
+        textBg.beginFill(0xFFFFFF, 0.8);
+        textBg.drawRect(this.x + this.width + 10, this.y, 120, 50);
+        textBg.endFill();
+        pixiApp.stage.addChild(textBg);
 
-    public isGameOver(): boolean {
-        return this.gameOver;
-    }
+        const style = new PIXI.TextStyle({
+            fontSize: 12,
+            fill: '#000000'
+        });
 
-    public getPosition(): { x: number, y: number } {
-        return { x: this.x, y: this.y };
-    }
-
-    public getDimensions(): { width: number, height: number } {
-        return { width: this.width, height: this.height };
+        [
+            { text: `Liquid: ${Math.round(this.liquid)}%`, y: 5 },
+            { text: `Foam: ${Math.round(this.foam)}%`, y: 25 },
+            { text: `Total: ${Math.round(this.liquid + this.foam)}%`, y: 45 }
+        ].forEach(({ text, y }) => {
+            const textSprite = new PIXI.Text(text, style);
+            textSprite.position.set(this.x + this.width + 15, this.y + y);
+            pixiApp.stage.addChild(textSprite);
+        });
+        */
     }
 }
 
