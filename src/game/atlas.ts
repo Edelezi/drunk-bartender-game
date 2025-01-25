@@ -14,15 +14,20 @@ export async function loadAssets() {
 }
 
 export function getSpine(name: string): Spine {
+    // @ts-ignore
     return new Spine(spineAnimations[name].spineData);
 }
 
 export function getTexture(texPathName: string): Texture {
+    // @ts-ignore
     if (mainAtlas.textures[texPathName]) {
+        // @ts-ignore
         return mainAtlas.textures[texPathName];
     }
 
+    // @ts-ignore
     if (slotAtlas.textures[texPathName]) {
+        // @ts-ignore
         return slotAtlas.textures[texPathName];
     }
 

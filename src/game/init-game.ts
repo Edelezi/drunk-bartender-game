@@ -4,7 +4,7 @@ import { Spine } from "pixi-spine";
 import { pixiMove } from "#src/pixi/pixi-move";
 import { Scene } from "./scene";
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 let pixiApp: Application;
 function makeSprite(texturePath = "", x = 0, y = 0, sx = 1, sy = 1) {
@@ -40,7 +40,7 @@ export function initGame(app: Application) {
 
     const scene = makeScene(cx, cy);
 
-    const sp = new Sprite(getTexture('main/arrow.png'));
+    const sp = new Sprite(getTexture("main/arrow.png"));
     sp.anchor.set(0.5);
     sp.x = 100;
     sp.y = 100;
@@ -50,5 +50,9 @@ export function initGame(app: Application) {
     const game: Game = {
         scene
     };
+
+    scene.startGame();
+    pixiApp.stage.addChild(scene.container);
+
     return { game };
 }

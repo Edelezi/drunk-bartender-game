@@ -34,10 +34,7 @@ async function init() {
     test.position.set(100, 100);
     app.stage.addChild(test);
 
-    const { slot } = initGame(app);
-    slot.init();
-
-    addEventListener("spin-click", slot.startGame.bind(slot));
+    initGame(app);
 
     // const graphics: Graphics = new Graphics();
     // graphics.rect(quad.x, quad.y, quad.width, quad.height);

@@ -17,6 +17,14 @@ export async function pixiInit(c: HTMLCanvasElement): Promise<Application> {
     await loadAssets();
     console.log("pixi init");
 
+    // @ts-ignore
+    window.__PIXI_DEVTOOLS__ = {
+        app: pixiApp
+        // If you are not using a pixi app, you can pass the renderer and stage directly
+        // renderer: myRenderer,
+        // stage: myStage,
+    };
+
     // resize();
     // window.addEventListener("resize", () => {
     //     resize();
