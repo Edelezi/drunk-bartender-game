@@ -1,5 +1,4 @@
 import { Signal } from '#src/common/signal';
-import { pixiApp } from '#src/pixi/pixi-init';
 import * as PIXI from 'pixi.js';
 
 interface BubbleProps {
@@ -47,7 +46,7 @@ class Cup {
     foam: number;
     x: number;
     y: number;
-    graphics: PIXI.Graphics;
+    private graphics: PIXI.Graphics;
     width: number;
     height: number;
     isPouring: boolean;
@@ -56,6 +55,7 @@ class Cup {
     bubbles: Bubble[];
     bubbleSpawnRate: number;
     overflow: Signal<void> = new Signal();
+    container: PIXI.Container;
     // deltaSeconds: number; //delta from preivous frame
 
     constructor({ x, y }: CupProps) {
@@ -63,21 +63,31 @@ class Cup {
         this.foam = 0;
         this.x = x;
         this.y = y;
+        this.container = new PIXI.Container();
         this.graphics = new PIXI.Graphics();
-        this.width = 60;
-        this.height = 100;
+        this.container.addChild(this.graphics);
+        this.width = 196/2;
+        this.height = 330/2;
         this.isPouring = false;
         this.foamDecayRate = 0.1;
         this.bubbles = [];
         this.bubbleSpawnRate = 0.2;
+
+        const cupBack = new PIXI.Sprite(PIXI.Texture.from("/assets/cup.png"));
+        this.container.addChild(cupBack);
+        cupBack.name = 'cup';
+        const sc = .5;
+        cupBack.scale.set(sc, sc);
+        cupBack.position.set(-13, -11);
     }
 
     update(delta: number): void {
+        this.container.position.set(this.x, this.y);
         //Bubbles sim
         if (Math.random() < this.bubbleSpawnRate && this.liquid > 0) {
-            const bubbleX = this.x + Math.random() * this.width;
+            const bubbleX = Math.random() * this.width;
             const liquidHeight = (this.height * this.liquid) / 100;
-            const bubbleY = this.y + this.height - Math.random() * liquidHeight;
+            const bubbleY = this.height - Math.random() * liquidHeight;
             this.bubbles.push(new Bubble({
                 x: bubbleX,
                 y: bubbleY,
@@ -86,8 +96,8 @@ class Cup {
         }
 
         this.bubbles = this.bubbles.filter(bubble => {
-            bubble.update(this.x, this.width);
-            const liquidTop = this.y + this.height - (this.height * this.liquid) / 100;
+            bubble.update(0, this.width);
+            const liquidTop = 0 + this.height - (this.height * this.liquid) / 100;
             return bubble.y > liquidTop;
         });
 
@@ -133,7 +143,7 @@ class Cup {
         // Draw cup outline
         g.lineStyle(2, 0x666666);
         g.beginFill(0xFFFFFF, 0.1);
-        g.drawRect(this.x, this.y, this.width, this.height);
+        g.drawRect(0, 0, this.width, this.height);
         g.endFill();
 
         // Calculate heights
@@ -143,8 +153,8 @@ class Cup {
         // Draw liquid
         g.beginFill(0xFEB20F);
         g.drawRect(
-            this.x,
-            this.y + this.height - liquidHeight,
+            0,
+            0 + this.height - liquidHeight,
             this.width,
             liquidHeight
         );
@@ -161,8 +171,8 @@ class Cup {
         // Draw foam
         g.beginFill(0xFFFACD, 0.8);
         g.drawRect(
-            this.x,
-            this.y + this.height - liquidHeight - foamHeight,
+            0,
+            0 + this.height - liquidHeight - foamHeight,
             this.width,
             foamHeight
         );

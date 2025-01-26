@@ -2,6 +2,7 @@ import { Cup } from './cup';
 
 interface DrunkenCupControllerProps {
     x: number;
+    y: number;
     swayAmplitude?: number;
     swayFrequency?: number;
     cup: null | Cup;
@@ -13,7 +14,7 @@ class DrunkenCupController  {
     private swayAmplitude: number;
     private swayFrequency: number;
 
-    constructor(private props: DrunkenCupControllerProps = { x: 0, swayAmplitude: 30, swayFrequency: 0.002, cup: null }) {
+    constructor(private props: DrunkenCupControllerProps = { x: 0, y: 0, swayAmplitude: 30, swayFrequency: 0.002, cup: null }) {
         this.initialX = this.props.x;
         this.time = 0;
         this.swayAmplitude = this.props.swayAmplitude;
@@ -24,6 +25,7 @@ class DrunkenCupController  {
         this.time += delta;
         const posX = this.initialX + Math.sin(this.time * this.swayFrequency) * this.swayAmplitude;
         this.props.cup.x = posX;
+        this.props.cup.y = this.props.y;
     }
 
     setSwayAmplitude(amplitude: number): void {

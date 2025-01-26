@@ -85,13 +85,13 @@ export function initGame(app: Application) {
 
     document.body.appendChild(pixiApp.view as any);
 
-    const cup = new Cup({ x: 350, y: 250 });
+    const cup = new Cup({ x: 512, y: 550 });
     beerTap.setCup(cup)
     const foamFountain = new FoamFountain(app, cup);
 
-    pixiApp.stage.addChild(cup.graphics);
+    pixiApp.stage.addChild(cup.container);
 
-    const dcc = new DrunkenCupController({ x: cup.x, swayAmplitude: 50, swayFrequency: 0.02, cup});
+    const dcc = new DrunkenCupController({ x: cup.x - 60/2, y: cup.y, swayAmplitude: 60, swayFrequency: 0.07, cup});
 
     const nextBtn = new NextButton(
         300,
