@@ -108,9 +108,10 @@ class Cup {
         }
 
         // Overflow - add foam fountain
-        if (this.liquid + this.foam >= 100) {
+        if (this.liquid + this.foam >= 99.5) {
             this.foam = 100 - this.liquid;
             console.log('liquid overflow');
+            this.foam = Math.min(0, this.foam - this.foamDecayRate * delta);
             this.overflow.dispatch()
             return;
         }

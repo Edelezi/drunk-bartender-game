@@ -122,7 +122,7 @@ export function initGame(app: Application) {
 
     pixiApp.stage.addChild(mainCup.container);
 
-    const dcc = new DrunkenCupController({ x: mainCup.x - 60 / 2, y: mainCup.y, swayAmplitude: 60, swayFrequency: 0.07, mainCup });
+    const dcc = new DrunkenCupController({ x: mainCup.x - 60 / 2, y: mainCup.y, swayAmplitude: 60, swayFrequency: 0.07, cup:mainCup });
 
     const congratulationMessage = new CongratulationMessage(pixiApp);
 
