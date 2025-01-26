@@ -14,6 +14,15 @@ class CongratulationMessage {
         this.container.visible = false;
         this.app.stage.addChild(this.container);
 
+
+
+        // Create semi-transparent background
+        this.background = new PIXI.Graphics();
+        this.background.beginFill(0x000000, 0.8);
+        this.background.drawRect(0, 0, app.screen.width, app.screen.height);
+        this.background.endFill();
+        this.container.addChild(this.background);
+
         const character = new PIXI.Sprite(PIXI.Texture.from("/assets/guy.png"));
         this.character = character;
         character.name = "ilya";
@@ -22,13 +31,6 @@ class CongratulationMessage {
         character.scale.set(scaleChar, scaleChar);
         character.position.set(150, 450);
         this.container.addChild(character);
-
-        // Create semi-transparent background
-        this.background = new PIXI.Graphics();
-        this.background.beginFill(0x000000, 0.5);
-        this.background.drawRect(0, 0, app.screen.width, app.screen.height);
-        this.background.endFill();
-        this.container.addChild(this.background);
 
         // Create text styles
         const titleStyle = new PIXI.TextStyle({
@@ -62,8 +64,8 @@ class CongratulationMessage {
 
         // Create close button
         this.closeButton = this.createCloseButton();
-        this.closeButton.x = app.screen.width / 2;
-        this.closeButton.y = app.screen.height / 2 + 120;
+        this.closeButton.x = app.screen.width / 2 + 200;
+        this.closeButton.y = app.screen.height / 2 + 250;
 
         // Add all elements to container
         this.container.addChild(this.messageText, this.percentageText, this.gradeText, this.closeButton);
@@ -77,7 +79,7 @@ class CongratulationMessage {
         buttonGraphics.drawRoundedRect(-50, -20, 100, 40, 8);
         buttonGraphics.endFill();
 
-        const buttonText = new PIXI.Text('Close', {
+        const buttonText = new PIXI.Text('Next', {
             fontFamily: 'Arial',
             fontSize: 20,
             fill: '#ffffff',
