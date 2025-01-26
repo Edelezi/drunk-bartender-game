@@ -110,7 +110,11 @@ class BeerParticleSystem {
                 gameState.addPoints(0.1);
                 const particleVolume = 0.05; // Adjust this value to control filling speed
                 this.cup.liquid = Math.min(100, this.cup.liquid + particleVolume);
-                this.cup.foam = Math.min(20, this.cup.foam + particleVolume * (Math.random() * 0.5 + 0.5));
+                this.cup.foam = this.cup.foam + (1-(this.cup.liquid / 100)) * (Math.random() * 0.2)
+                // if (this.cup.liquid + this.cup.foam > 100) {
+                //     this.cup.foam = 100 - this.cup.liquid;
+                //     this.cup.overflow.dispatch()
+                // }
                 return true;
             }
         };
@@ -127,19 +131,6 @@ class BeerParticleSystem {
             }
         }
 
-        // Check if particle is within cup boundaries
-        // const cupLeft = this.cup.x;
-        // const cupRight = this.cup.x + this.cup.width;
-        // const cupTop = this.cup.y;
-        // const cupBottom = this.cup.y + this.cup.height;
-        // const liquidTop = cupBottom - (this.cup.height * this.cup.liquid) / 100;
-
-        // if (particleGlobalPos.x >= cupLeft &&
-        //     particleGlobalPos.x <= cupRight &&
-        //     particleGlobalPos.y >= cupTop &&
-        //     particleGlobalPos.y <= cupBottom) {
-
-        // }
         return false;
     }
 
