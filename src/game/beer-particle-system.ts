@@ -95,22 +95,16 @@ class BeerParticleSystem {
         // Convert particle position to global coordinates
         const particleGlobalPos = this.container.toGlobal(new PIXI.Point(particle.x, particle.y));
 
-        // Check if particle is within cup boundaries
+        // Check horizontal bounds first
         const cupLeft = this.cup.x;
         const cupRight = this.cup.x + this.cup.width;
-        const cupTop = this.cup.y;
         const cupBottom = this.cup.y + this.cup.height;
         const liquidTop = cupBottom - (this.cup.height * this.cup.liquid) / 100;
 
-        if (particleGlobalPos.x >= cupLeft &&
-            particleGlobalPos.x <= cupRight &&
-            particleGlobalPos.y >= cupTop &&
-            particleGlobalPos.y <= cupBottom) {
-
+        const fill = () => {
             // If particle hits liquid surface or cup is empty
             if (particleGlobalPos.y >= liquidTop || this.cup.liquid === 0) {
-                // Increase liquid level
-                const particleVolume = 0.1; // Adjust this value to control filling speed
+                const particleVolume = 0.05; // Adjust this value to control filling speed
                 this.cup.liquid = Math.min(100, this.cup.liquid + particleVolume);
                 this.cup.foam = Math.min(
                     20,
@@ -119,6 +113,33 @@ class BeerParticleSystem {
                 return true;
             }
         }
+        if (particleGlobalPos.x >= cupLeft && particleGlobalPos.x <= cupRight) {
+            // Check if particle hits the liquid surface
+            if (this.cup.liquid >= 5 && particleGlobalPos.y >= liquidTop && particleGlobalPos.y <= cupBottom) {
+                fill();
+                return true;
+            }
+            // Check if particle hits the cup bottom when empty
+            if (this.cup.liquid < 5 && particleGlobalPos.y >= cupBottom - 2 && particleGlobalPos.y <= cupBottom + 5) {
+                fill();
+                return true;
+            }
+        }
+
+
+        // Check if particle is within cup boundaries
+        // const cupLeft = this.cup.x;
+        // const cupRight = this.cup.x + this.cup.width;
+        // const cupTop = this.cup.y;
+        // const cupBottom = this.cup.y + this.cup.height;
+        // const liquidTop = cupBottom - (this.cup.height * this.cup.liquid) / 100;
+
+        // if (particleGlobalPos.x >= cupLeft &&
+        //     particleGlobalPos.x <= cupRight &&
+        //     particleGlobalPos.y >= cupTop &&
+        //     particleGlobalPos.y <= cupBottom) {
+
+        // }
         return false;
     }
 

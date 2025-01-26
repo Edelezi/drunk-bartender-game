@@ -51,13 +51,12 @@ class Cup {
     width: number;
     height: number;
     isPouring: boolean;
-    liquidFillRate: number;
     foamFillRate: number;
     foamDecayRate: number;
     bubbles: Bubble[];
     bubbleSpawnRate: number;
     overflow: Signal<void> = new Signal();
-    deltaSeconds: number; //delta from preivous frame
+    // deltaSeconds: number; //delta from preivous frame
 
     constructor({ x, y }: CupProps) {
         this.liquid = 0;
@@ -68,9 +67,6 @@ class Cup {
         this.width = 60;
         this.height = 100;
         this.isPouring = false;
-        // this.liquidFillRate = (5 + Math.random() * 5) / 100000;
-        this.liquidFillRate = 0.000001; // 5% per second
-        this.foamFillRate = this.liquidFillRate * (Math.random() * 1.7 + 0.3);
         this.foamDecayRate = 0.1;
         this.bubbles = [];
         this.bubbleSpawnRate = 0.2;
@@ -110,11 +106,12 @@ class Cup {
         }
 
         // Convert delta to seconds
-        this.deltaSeconds = delta / 1000;
-        if (this.isPouring)
-            this.pour(this.deltaSeconds);
+        // this.deltaSeconds = delta / 1000;
+        // if (this.isPouring)
+            // this.pour(this.deltaSeconds);
     }
 
+    /*
     pour(deltaSeconds) {
         const totalContent = this.liquid + this.foam;
         if (totalContent < 100) {
@@ -127,6 +124,7 @@ class Cup {
             this.foam += foamIncrease;
         }
     }
+    */
 
     draw(): void {
         const g = this.graphics;

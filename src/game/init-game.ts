@@ -7,6 +7,7 @@ import { Cup } from "./cup";
 import { BeerParticle, BeerParticleSystem } from "./beer-particle-system";
 import { TapButton } from "./tap-button";
 import { FoamFountain } from "./foam-fontain";
+import { DrunkenCupController } from "./drunken-cup-controller";
 
 const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -91,6 +92,8 @@ export function initGame(app: Application) {
     const foamFountain = new FoamFountain(app, cup);
 
     pixiApp.stage.addChild(cup.graphics);
+
+    const dcc = new DrunkenCupController({ x: cup.x, swayAmplitude: 50, swayFrequency: 0.02, cup});
     // pixiApp.view.addEventListener('mousedown', () => {
     //     cup.isPouring = true;
     // });
@@ -113,6 +116,7 @@ export function initGame(app: Application) {
 
     pixiApp.ticker.add((delta: number) => {
         cup.update(delta);
+        dcc.update(delta);
         cup.draw();
     });
 
