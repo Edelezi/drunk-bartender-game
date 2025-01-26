@@ -77,12 +77,12 @@ class CongratulationMessage {
 
         const buttonGraphics = new PIXI.Graphics();
         buttonGraphics.beginFill(0x4CAF50);
-        buttonGraphics.drawRoundedRect(-50, -20, 150, 60, 8);
+        buttonGraphics.drawRoundedRect(-50, -20, 100, 40, 8);
         buttonGraphics.endFill();
 
         const buttonText = new PIXI.Text('Shut up', {
             fontFamily: 'Arial',
-            fontSize: 30,
+            fontSize: 20,
             fill: '#ffffff',
         });
         buttonText.anchor.set(0.5);
