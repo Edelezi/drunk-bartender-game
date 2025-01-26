@@ -85,7 +85,6 @@ export function initGame(app: Application) {
         doneBtn.visible = false;
         startGameBtn.visible = true;
         tapButton.visible = false;
-        _gameFinishMessage.show();
     }, this);
 
     pointsUpdatedSignal.add((points: number) => {
@@ -163,6 +162,10 @@ export function initGame(app: Application) {
     const congratulationMessage = new CongratulationMessage(pixiApp);
 
     const _gameFinishMessage = new GameFinishMessage(pixiApp);
+
+    gameFinishSignal.add(() => {
+        _gameFinishMessage.show();
+    }, this);
 
     const doneBtn = new NextButton(426, 754, 183, 106);
     app.stage.addChild(doneBtn);

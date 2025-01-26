@@ -91,7 +91,7 @@ class GameFinishMessage {
 
         button.eventMode = "static";
         button.cursor = "pointer";
-        button.on("pointerdown", () => this.hide());
+        button.on("pointerdown", () => this.hide(true));
 
         return button;
     }
@@ -118,9 +118,11 @@ class GameFinishMessage {
         }
     }
 
-    public hide(): void {
+    public hide(internal?: boolean): void {
         console.log("hide");
-        gameStartSignal.dispatch();
+        if (internal) {
+            gameStartSignal.dispatch();
+        }
         this.container.visible = false;
     }
 }
