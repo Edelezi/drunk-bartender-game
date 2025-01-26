@@ -13,6 +13,7 @@ import { ZoomBlurFilter } from "@pixi/filter-zoom-blur";
 import { beerDoneSignal, clientSelectSignal, gameStartSignal } from "#src/signals/game";
 import { clientLeaveSignal, ClientModel } from "#src/model/barModel";
 import { CongratulationMessage } from "./congratulations-message";
+import { Ticker } from "#src/common";
 
 const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -60,14 +61,16 @@ export function initGame(app: Application) {
     barBack.scale.set(backScale, backScale);
     pixiApp.stage.addChild(barBack);
 
+
+
     const scene = makeScene(cx, cy);
 
-    const sp = new Sprite(getTexture("main/arrow.png"));
-    sp.anchor.set(0.5);
-    sp.x = 100;
-    sp.y = 100;
-    sp.scale.set(1, 1);
-    pixiApp.stage.addChild(sp);
+    // const sp = new Sprite(getTexture("main/arrow.png"));
+    // sp.anchor.set(0.5);
+    // sp.x = 100;
+    // sp.y = 100;
+    // sp.scale.set(1, 1);
+    // pixiApp.stage.addChild(sp);
 
     const game: Game = {
         scene
@@ -128,6 +131,8 @@ export function initGame(app: Application) {
 
     const dcc = new DrunkenCupController({ x: mainCup.x - 60 / 2, y: mainCup.y, swayAmplitude: 60, swayFrequency: 0.07, cup: mainCup });
 
+
+
     const congratulationMessage = new CongratulationMessage(pixiApp);
 
     const doneBtn = new NextButton(426, 754, 183, 106);
@@ -136,6 +141,7 @@ export function initGame(app: Application) {
         () => () => {},
         () => {
             beerDoneSignal.dispatch(_selectedSpot);
+            character.visible = true;
             congratulationMessage.show(mainCup.liquid);
             mainCup.liquid = 0;
             mainCup.foam = 0;
@@ -165,6 +171,8 @@ export function initGame(app: Application) {
     });
     fillPercentage.position.set(411, 160);
     pixiApp.stage.addChild(fillPercentage);
+
+
 
     pixiApp.ticker.add((delta: number) => {
         if (mainCup.liquid >= 100) {

@@ -7,11 +7,21 @@ class CongratulationMessage {
     private gradeText: PIXI.Text;
     private percentageText: PIXI.Text;
     private closeButton: PIXI.Container;
+    private character: PIXI.Sprite;
 
     constructor(private app: PIXI.Application) {
         this.container = new PIXI.Container();
         this.container.visible = false;
         this.app.stage.addChild(this.container);
+
+        const character = new PIXI.Sprite(PIXI.Texture.from("/assets/guy.png"));
+        this.character = character;
+        character.name = "ilya";
+        character.visible = false;
+        const scaleChar = 0.5;
+        character.scale.set(scaleChar, scaleChar);
+        character.position.set(150, 450);
+        this.container.addChild(character);
 
         // Create semi-transparent background
         this.background = new PIXI.Graphics();
@@ -165,8 +175,10 @@ class CongratulationMessage {
         // Add fade-in animation
         this.container.alpha = 0;
         this.app.ticker.add(this.fadeIn, this);
+        this.character.visible = true;
 
         this.hideTimeout = setTimeout(() => {
+            this.character.visible = false;
             this.hide();
         }, 3000);
     }
