@@ -5,3 +5,4 @@ export const clientSelectSignal = new Signal();
 export const beerDoneSignal = new Signal();
 export const gameFinishSignal = new Signal();
 export const lastClientSignal = new Signal();
+export const pointsUpdatedSignal = new Signal();

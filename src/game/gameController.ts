@@ -2,6 +2,8 @@ import { LevelModel } from "#src/model/levelModel";
 import { BarModel, clientLeaveSignal, ClientModel } from "#src/model/barModel";
 import { getRandomNumber } from "#src/helpers/gameHelpers";
 import { beerDoneSignal, gameFinishSignal, lastClientSignal } from "#src/signals/game";
+import { getMainCup } from "#src/game/init-game";
+import { gameState } from "#src/model/gameState";
 
 export class GameController {
     private _currentLevel: LevelModel | undefined;
@@ -62,6 +64,15 @@ export class GameController {
     }
 
     private onBeerDone(spot: number): void {
+        let points = 0;
+        const mainCup = getMainCup();
+        const liquid = mainCup.liquid;
+        if (liquid < 50) {
+            points = 0;
+        } else {
+            points = Math.floor(liquid - 50);
+        }
+        gameState.addPoints(points);
         console.log("onBeerDone");
         this._barModel.removeClient(spot);
     }

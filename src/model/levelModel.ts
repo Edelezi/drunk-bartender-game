@@ -7,6 +7,28 @@ export type LevelModel = {
     maxGapTime: number;
 };
 
+export const getLevel = (level: number): LevelModel => {
+    switch (level) {
+        case 1:
+            return {
+                ...level1,
+                clients: generateClients(8)
+            };
+        case 2:
+            return {
+                ...level2,
+                clients: generateClients(10)
+            };
+        case 3:
+            return {
+                ...level3,
+                clients: generateClients(12)
+            };
+        default:
+            throw new Error("Invalid level");
+    }
+};
+
 export const level1: LevelModel = {
     clients: generateClients(8),
     minGapTime: 1,

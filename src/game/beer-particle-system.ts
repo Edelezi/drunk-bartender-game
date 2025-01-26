@@ -1,5 +1,6 @@
-import * as PIXI from 'pixi.js';
-import { Cup } from './cup';
+import * as pixi from "pixi.js";
+import { Cup } from "./cup";
+import { gameState } from "#src/model/gameState";
 
 interface Vector2D {
     x: number;
@@ -15,11 +16,11 @@ interface ParticleOptions {
     color?: number;
 }
 
-class BeerParticle extends PIXI.Sprite {
+class BeerParticle extends pixi.Sprite {
     velocity: Vector2D = { x: 0, y: 0 };
     acceleration: Vector2D = { x: 0, y: 0 };
 
-    constructor(texture: PIXI.Texture) {
+    constructor(texture: pixi.Texture) {
         super(texture);
         this.reset();
     }
@@ -30,7 +31,7 @@ class BeerParticle extends PIXI.Sprite {
         this.alpha = 0.6 + Math.random() * 0.4;
         this.scale.set(0.5 + Math.random() * 0.5);
         this.velocity = {
-            x: .2 * Math.random() * (Math.random() > .5 ? 1 : -1),
+            x: 0.2 * Math.random() * (Math.random() > 0.5 ? 1 : -1),
             y: 2 + Math.random() * 3
         };
         this.acceleration = {
@@ -50,17 +51,17 @@ class BeerParticle extends PIXI.Sprite {
 }
 
 class BeerParticleSystem {
-    private app: PIXI.Application;
-    private container: PIXI.Container;
-    private particleTexture: PIXI.Texture;
+    private app: pixi.Application;
+    private container: pixi.Container;
+    private particleTexture: pixi.Texture;
     private particles: BeerParticle[];
     private options: Required<ParticleOptions>;
     private cup: Cup | null = null;
     isFlowing: boolean;
 
-    constructor(app: PIXI.Application, position: Vector2D, options: ParticleOptions = {}) {
+    constructor(app: pixi.Application, position: Vector2D, options: ParticleOptions = {}) {
         this.app = app;
-        this.container = new PIXI.Container();
+        this.container = new pixi.Container();
         this.container.position.set(position.x, position.y);
         this.app.stage.addChild(this.container);
 
@@ -73,7 +74,7 @@ class BeerParticleSystem {
             color: options.color ?? 0xf4e675
         };
 
-        const graphics = new PIXI.Graphics();
+        const graphics = new pixi.Graphics();
         graphics.beginFill(this.options.color);
         graphics.drawCircle(0, 0, this.options.particleSize);
         graphics.endFill();
@@ -90,10 +91,12 @@ class BeerParticleSystem {
     }
 
     private checkCupCollision(particle: BeerParticle): boolean {
-        if (!this.cup) return false;
+        if (!this.cup) {
+            return false;
+        }
 
         // Convert particle position to global coordinates
-        const particleGlobalPos = this.container.toGlobal(new PIXI.Point(particle.x, particle.y));
+        const particleGlobalPos = this.container.toGlobal(new pixi.Point(particle.x, particle.y));
 
         // Check horizontal bounds first
         const cupLeft = this.cup.x;
@@ -104,15 +107,13 @@ class BeerParticleSystem {
         const fill = () => {
             // If particle hits liquid surface or cup is empty
             if (particleGlobalPos.y >= liquidTop || this.cup.liquid === 0) {
+                gameState.addPoints(0.1);
                 const particleVolume = 0.05; // Adjust this value to control filling speed
                 this.cup.liquid = Math.min(100, this.cup.liquid + particleVolume);
-                this.cup.foam = Math.min(
-                    20,
-                    this.cup.foam + (particleVolume * (Math.random() * 0.5 + 0.5))
-                );
+                this.cup.foam = Math.min(20, this.cup.foam + particleVolume * (Math.random() * 0.5 + 0.5));
                 return true;
             }
-        }
+        };
         if (particleGlobalPos.x >= cupLeft && particleGlobalPos.x <= cupRight) {
             // Check if particle hits the liquid surface
             if (this.cup.liquid >= 5 && particleGlobalPos.y >= liquidTop && particleGlobalPos.y <= cupBottom) {
@@ -125,7 +126,6 @@ class BeerParticleSystem {
                 return true;
             }
         }
-
 
         // Check if particle is within cup boundaries
         // const cupLeft = this.cup.x;

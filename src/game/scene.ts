@@ -1,9 +1,9 @@
-import { Container, Graphics } from "pixi.js";
+import { Container } from "pixi.js";
 import { assert, Ticker } from "../common";
 import { barSpots, clientArrivedSignal, clientLeaveSignal, ClientModel } from "#src/model/barModel";
 import { GameController } from "#src/game/gameController";
-import { level1 } from "#src/model/levelModel";
-import { beerDoneSignal, clientSelectSignal, gameStartSignal } from "#src/signals/game";
+import { getLevel } from "#src/model/levelModel";
+import { clientSelectSignal, gameStartSignal } from "#src/signals/game";
 import { pixiApp } from "#src/pixi/pixi-init";
 
 let previousTimeStamp = -1;
@@ -87,7 +87,7 @@ export class Scene {
     }
 
     startGame() {
-        this.gameController.startGame(level1);
+        this.gameController.startGame(getLevel(1));
     }
 
     private selectSpot(pos: number) {

@@ -1,6 +1,7 @@
 import { Signal } from "#src/common/signal";
 import { Cup } from "#src/game/cup";
 import { Text } from "pixi.js";
+import { gameFinishSignal } from "#src/signals/game";
 
 export class ClientModel {
     private readonly _id: number;
@@ -56,6 +57,14 @@ export class BarModel {
             this._spots.push(undefined);
             this._timerIds.push(undefined);
         }
+
+        gameFinishSignal.add(() => {
+            this._spots.forEach((spot, index) => {
+                if (spot) {
+                    this.removeClient(index);
+                }
+            }, this);
+        }, this);
     }
 
     public getClient(spot: number) {
@@ -86,6 +95,7 @@ export class BarModel {
             throw new Error("spot is already empty");
         }
         clearTimeout(this._timerIds[spot] as number);
+        this._timerIds[spot] = undefined;
         this._spots[spot] = undefined;
         clientLeaveSignal.dispatch({ spot });
     }
