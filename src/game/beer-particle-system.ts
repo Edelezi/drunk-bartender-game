@@ -1,5 +1,5 @@
-import { Vector2 } from 'pixi-spine';
 import * as PIXI from 'pixi.js';
+import { Cup } from './cup';
 
 interface Vector2D {
     x: number;
@@ -16,8 +16,8 @@ interface ParticleOptions {
 }
 
 class BeerParticle extends PIXI.Sprite {
-    velocity: Vector2D = new Vector2();
-    acceleration: Vector2D = new Vector2();
+    velocity: Vector2D = { x: 0, y: 0 };
+    acceleration: Vector2D = { x: 0, y: 0 };
 
     constructor(texture: PIXI.Texture) {
         super(texture);
@@ -55,6 +55,7 @@ class BeerParticleSystem {
     private particleTexture: PIXI.Texture;
     private particles: BeerParticle[];
     private options: Required<ParticleOptions>;
+    private cup: Cup | null = null;
     isFlowing: boolean;
 
     constructor(app: PIXI.Application, position: Vector2D, options: ParticleOptions = {}) {
@@ -84,6 +85,43 @@ class BeerParticleSystem {
         this.app.ticker.add(this.update.bind(this));
     }
 
+    setCup(cup: Cup): void {
+        this.cup = cup;
+    }
+
+    private checkCupCollision(particle: BeerParticle): boolean {
+        if (!this.cup) return false;
+
+        // Convert particle position to global coordinates
+        const particleGlobalPos = this.container.toGlobal(new PIXI.Point(particle.x, particle.y));
+
+        // Check if particle is within cup boundaries
+        const cupLeft = this.cup.x;
+        const cupRight = this.cup.x + this.cup.width;
+        const cupTop = this.cup.y;
+        const cupBottom = this.cup.y + this.cup.height;
+        const liquidTop = cupBottom - (this.cup.height * this.cup.liquid) / 100;
+
+        if (particleGlobalPos.x >= cupLeft &&
+            particleGlobalPos.x <= cupRight &&
+            particleGlobalPos.y >= cupTop &&
+            particleGlobalPos.y <= cupBottom) {
+
+            // If particle hits liquid surface or cup is empty
+            if (particleGlobalPos.y >= liquidTop || this.cup.liquid === 0) {
+                // Increase liquid level
+                const particleVolume = 0.1; // Adjust this value to control filling speed
+                this.cup.liquid = Math.min(100, this.cup.liquid + particleVolume);
+                this.cup.foam = Math.min(
+                    20,
+                    this.cup.foam + (particleVolume * (Math.random() * 0.5 + 0.5))
+                );
+                return true;
+            }
+        }
+        return false;
+    }
+
     startFlow(): void {
         this.isFlowing = true;
     }
@@ -96,6 +134,7 @@ class BeerParticleSystem {
         if (this.isFlowing && this.particles.length < this.options.maxParticles) {
             for (let i = 0; i < this.options.emissionRate; i++) {
                 const particle = new BeerParticle(this.particleTexture);
+                particle.reset();
                 this.particles.push(particle);
                 this.container.addChild(particle);
             }
@@ -105,11 +144,16 @@ class BeerParticleSystem {
             const particle = this.particles[i];
             const alive = particle.update();
 
-            if (!alive || particle.y > 300) {
+            if (this.checkCupCollision(particle)) {
                 this.container.removeChild(particle);
                 this.particles.splice(i, 1);
                 particle.destroy();
-                // particle.reset();
+
+                this.cup.isPouring = true;
+            } else if (!alive || particle.y > 300) {
+                this.container.removeChild(particle);
+                this.particles.splice(i, 1);
+                particle.destroy();
             }
         }
     }

@@ -63,6 +63,7 @@ export function initGame(app: Application) {
         gravity: 0.15
     });
 
+
     // app.view.addEventListener('click', () => {
     //     beerTap.isFlowing ? beerTap.stopFlow() : beerTap.startFlow();
     // });
@@ -85,19 +86,20 @@ export function initGame(app: Application) {
     document.body.appendChild(pixiApp.view as any);
 
     const cup = new Cup({ x: 350, y: 250 });
+    beerTap.setCup(cup)
+
     pixiApp.stage.addChild(cup.graphics);
+    // pixiApp.view.addEventListener('mousedown', () => {
+    //     cup.isPouring = true;
+    // });
 
-    pixiApp.view.addEventListener('mousedown', () => {
-        cup.isPouring = true;
-    });
+    // pixiApp.view.addEventListener('mouseup', () => {
+    //     cup.isPouring = false;
+    // });
 
-    pixiApp.view.addEventListener('mouseup', () => {
-        cup.isPouring = false;
-    });
-
-    pixiApp.view.addEventListener('mouseleave', () => {
-        cup.isPouring = false;
-    });
+    // pixiApp.view.addEventListener('mouseleave', () => {
+    //     cup.isPouring = false;
+    // });
 
     const instructions = new Text('Hold mouse button to fill the cup', {
         fontSize: 16,

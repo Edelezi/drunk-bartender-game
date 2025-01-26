@@ -73,22 +73,7 @@ class Cup {
     }
 
     update(delta: number): void {
-        if (this.isPouring) {
-            const totalContent = this.liquid + this.foam;
-            if (totalContent < 100) {
-                const remainingSpace = 100 - totalContent;
-                const liquidIncrease = Math.min(remainingSpace, this.liquidFillRate);
-                const foamIncrease = Math.min(remainingSpace - liquidIncrease, this.foamFillRate);
-
-                this.liquid += liquidIncrease;
-                this.foam += foamIncrease;
-            }
-        }
-
-        if (this.foam > 4) {
-            this.foam = Math.max(4, this.foam - this.foamDecayRate * delta);
-        }
-
+        //Bubbles sim
         if (Math.random() < this.bubbleSpawnRate && this.liquid > 0) {
             const bubbleX = this.x + Math.random() * this.width;
             const liquidHeight = (this.height * this.liquid) / 100;
@@ -105,6 +90,31 @@ class Cup {
             const liquidTop = this.y + this.height - (this.height * this.liquid) / 100;
             return bubble.y > liquidTop;
         });
+
+        // Foam decrease over time
+        if (this.foam > 4) {
+            this.foam = Math.max(4, this.foam - this.foamDecayRate * delta);
+        }
+
+        // Overflow - add foam fountain
+        if (this.liquid + this.foam >= 100) {
+            this.foam = 100 - this.liquid;
+            console.log('liquid overflow');
+            return;
+        }
+
+        if (this.isPouring) {
+            const totalContent = this.liquid + this.foam;
+            if (totalContent < 100) {
+                const remainingSpace = 100 - totalContent;
+                const liquidIncrease = Math.min(remainingSpace, this.liquidFillRate);
+                const foamIncrease = Math.min(remainingSpace - liquidIncrease, this.foamFillRate);
+
+                this.liquid += liquidIncrease;
+                this.foam += foamIncrease;
+            }
+            this.isPouring = false
+        }
     }
 
     draw(): void {
