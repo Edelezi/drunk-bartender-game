@@ -109,9 +109,9 @@ export function initGame(app: Application) {
         mainCup.liquid = client.cup.liquid;
         mainCup.foam = client.cup.foam;
         mainCup.container.visible = true;
-        const rate = Math.random() * 0.5;
-        mainCup.foamDecayRate = 0.1 + rate;
-        mainCup.bubbleSpawnRate = 0.2 + rate * 2;
+        const rate = Math.random() * 0.1;
+        mainCup.foamDecayRate = 0.05 + rate;
+        mainCup.bubbleSpawnRate = 0.05 + rate;
     }, this);
 
     clientLeaveSignal.add(({ spot }: { spot: number }) => {
