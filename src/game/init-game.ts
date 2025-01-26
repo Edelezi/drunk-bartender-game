@@ -156,6 +156,9 @@ export function initGame(app: Application) {
             gameStartSignal.dispatch();
         }
     );
+    window.setTimeout(() => {
+        gameStartSignal.dispatch();
+    }, 500);
 
     const instructions = new Text("Hold mouse button to fill the cup", {
         fontSize: 16,
