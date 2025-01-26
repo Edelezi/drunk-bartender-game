@@ -1,20 +1,30 @@
 import { LevelModel } from "#src/model/levelModel";
-import { BarModel, ClientModel } from "#src/model/barModel";
+import { BarModel, clientLeaveSignal, ClientModel } from "#src/model/barModel";
 import { getRandomNumber } from "#src/helpers/gameHelpers";
-import { beerDoneSignal, gameFinishSignal } from "#src/signals/game";
+import { beerDoneSignal, gameFinishSignal, lastClientSignal } from "#src/signals/game";
 
 export class GameController {
     private _currentLevel: LevelModel | undefined;
     private _barModel: BarModel;
     private _lastClientIndex = -1;
+    private _isLastClient = false;
 
     constructor() {
         this._barModel = new BarModel();
         beerDoneSignal.add(this.onBeerDone, this);
+        clientLeaveSignal.add(this.onClientLeave, this);
     }
 
     public get barModel() {
         return this._barModel;
+    }
+
+    private onClientLeave(): void {
+        console.log(this._isLastClient + " " + this._barModel.hasClients());
+        if (this._isLastClient && !this._barModel.hasClients()) {
+            this.finishGame();
+            return;
+        }
     }
 
     private getNextClient(): ClientModel | undefined {
@@ -26,7 +36,8 @@ export class GameController {
         this._lastClientIndex++;
         if (this._lastClientIndex >= this._currentLevel.clients.length) {
             this._lastClientIndex = -1;
-            this.finishGame();
+            lastClientSignal.dispatch();
+            this._isLastClient = true;
             return undefined;
         }
         return this._currentLevel.clients[this._lastClientIndex];

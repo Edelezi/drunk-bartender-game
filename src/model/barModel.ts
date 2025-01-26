@@ -80,6 +80,10 @@ export class BarModel {
         clientLeaveSignal.dispatch({ spot });
     }
 
+    public hasClients(): boolean {
+        return this._spots.some(spot => !!spot);
+    }
+
     public getFreeSpot(): number {
         return this._spots.findIndex(spot => !spot);
     }
