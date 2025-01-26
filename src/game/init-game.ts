@@ -10,6 +10,7 @@ import { FoamFountain } from "./foam-fontain";
 import { DrunkenCupController } from "./drunken-cup-controller";
 import { NextButton } from "./next-button";
 import {ZoomBlurFilter} from '@pixi/filter-zoom-blur';
+import { CongratulationMessage } from "./congratulations-message";
 
 const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -94,6 +95,7 @@ export function initGame(app: Application) {
 
     const dcc = new DrunkenCupController({ x: cup.x - 60/2, y: cup.y, swayAmplitude: 60, swayFrequency: 0.07, cup});
 
+    const congratulationMessage = new CongratulationMessage(pixiApp);
     const nextBtn = new NextButton(
         300,
         480,
@@ -104,6 +106,7 @@ export function initGame(app: Application) {
     nextBtn.setCallbacks(
         () => () => {},
         () => {
+            congratulationMessage.show(cup.liquid);
             cup.liquid = 0;
             cup.foam = 0;
         }
@@ -138,7 +141,7 @@ export function initGame(app: Application) {
         fontSize: 50,
         fill: '#FFFFFF'
     });
-    fillPercentage.position.set(500, 400);
+    fillPercentage.position.set(411, 760);
     pixiApp.stage.addChild(fillPercentage);
 
     pixiApp.ticker.add((delta: number) => {
@@ -157,7 +160,7 @@ export function initGame(app: Application) {
     // const df = new DisplacementFilter();
 
     const zbf = new ZoomBlurFilter();
-    zbf.strength = 0.05;
+    zbf.strength = 0.0;
     zbf.center[0] = 512;
     zbf.center[1] = 512;
     zbf.innerRadius = 250;
