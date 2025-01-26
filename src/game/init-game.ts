@@ -141,7 +141,6 @@ export function initGame(app: Application) {
         () => () => {},
         () => {
             beerDoneSignal.dispatch(_selectedSpot);
-            character.visible = true;
             congratulationMessage.show(mainCup.liquid);
             mainCup.liquid = 0;
             mainCup.foam = 0;
