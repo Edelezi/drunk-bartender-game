@@ -19,7 +19,7 @@ class CongratulationMessage {
         // Create semi-transparent background
         this.background = new PIXI.Graphics();
         this.background.beginFill(0x000000, 0.8);
-        this.background.drawRect(0, 0, app.screen.width, app.screen.height);
+        this.background.drawRect(-100 + 400, 177 + 169, 450, 169);
         this.background.endFill();
         this.container.addChild(this.background);
 
@@ -29,7 +29,7 @@ class CongratulationMessage {
         character.visible = false;
         const scaleChar = 0.5;
         character.scale.set(scaleChar, scaleChar);
-        character.position.set(150, 450);
+        character.position.set(-100, 450);
         this.container.addChild(character);
 
         // Create text styles
@@ -79,7 +79,7 @@ class CongratulationMessage {
         buttonGraphics.drawRoundedRect(-50, -20, 100, 40, 8);
         buttonGraphics.endFill();
 
-        const buttonText = new PIXI.Text('Next', {
+        const buttonText = new PIXI.Text('Shut up', {
             fontFamily: 'Arial',
             fontSize: 20,
             fill: '#ffffff',
@@ -179,10 +179,10 @@ class CongratulationMessage {
         this.app.ticker.add(this.fadeIn, this);
         this.character.visible = true;
 
-        this.hideTimeout = setTimeout(() => {
-            this.character.visible = false;
-            this.hide();
-        }, 3000);
+        // this.hideTimeout = setTimeout(() => {
+        //     this.character.visible = false;
+        //     this.hide();
+        // }, 4000);
     }
 
     private fadeIn(): void {
