@@ -4,6 +4,8 @@ import { Spine } from "pixi-spine";
 import { pixiMove } from "#src/pixi/pixi-move";
 import { Scene } from "./scene";
 import { Cup } from "./cup";
+import { BeerParticle, BeerParticleSystem } from "./beer-particle-system";
+import { TapButton } from "./tap-button";
 
 const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -53,6 +55,30 @@ export function initGame(app: Application) {
     const game: Game = {
         scene
     };
+
+    const beerTap = new BeerParticleSystem(app, { x: 400, y: 100 }, {
+        maxParticles: 250,
+        emissionRate: 8,
+        color: 0xf4e675,
+        gravity: 0.15
+    });
+
+    // app.view.addEventListener('click', () => {
+    //     beerTap.isFlowing ? beerTap.stopFlow() : beerTap.startFlow();
+    // });
+    const button = new TapButton(
+        300,
+        400,
+        150,
+        50
+    );
+
+    button.setCallbacks(
+        () => beerTap.startFlow(),
+        () => beerTap.stopFlow()
+    );
+
+    app.stage.addChild(button);
 
     pixiApp.stage.addChild(scene.container);
 

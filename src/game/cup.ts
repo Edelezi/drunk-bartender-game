@@ -122,7 +122,7 @@ class Cup {
         const foamHeight = (this.height * this.foam) / 100;
 
         // Draw liquid
-        g.beginFill(0xC2853B);
+        g.beginFill(0xFEB20F);
         g.drawRect(
             this.x,
             this.y + this.height - liquidHeight,

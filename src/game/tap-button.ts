@@ -1,0 +1,78 @@
+import * as PIXI from 'pixi.js';
+
+class TapButton extends PIXI.Container {
+    private background: PIXI.Graphics;
+    private label: PIXI.Text;
+    private isPressed: boolean = false;
+    private onPress: () => void;
+    private onRelease: () => void;
+
+    constructor(x: number, y: number, width: number, height: number) {
+        super();
+        this.x = x;
+        this.y = y;
+
+        // Create button background
+        this.background = new PIXI.Graphics();
+        this.addChild(this.background);
+
+        // Create button text
+        const style = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            fontSize: 24,
+            fill: 'white',
+            fontWeight: 'bold'
+        });
+
+        this.label = new PIXI.Text('Hold to Pour', style);
+        this.label.anchor.set(0.5);
+        this.label.x = width / 2;
+        this.label.y = height / 2;
+        this.addChild(this.label);
+
+        // Make interactive
+        this.eventMode = 'static';
+        this.cursor = 'pointer';
+
+        // Event listeners
+        this.on('pointerdown', this.handlePress);
+        this.on('pointerup', this.handleRelease);
+        this.on('pointerupoutside', this.handleRelease);
+        this.on('touchstart', this.handlePress);
+        this.on('touchend', this.handleRelease);
+        this.on('touchendoutside', this.handleRelease);
+        this.drawBackground(0x4CAF50);
+    }
+
+    private drawBackground(color: number): void {
+        this.background.clear();
+        this.background.beginFill(color);
+        this.background.drawRoundedRect(0, 0, this.label.width + 40, this.label.height + 20, 8);
+        this.background.endFill();
+
+        // Add shadow/highlight effect
+        this.background.lineStyle(2, this.isPressed ? 0x368a3a : 0x5dbf61);
+        this.background.drawRoundedRect(0, 0, this.label.width + 40, this.label.height + 20, 8);
+    }
+
+    private handlePress = (): void => {
+        this.isPressed = true;
+        this.drawBackground(0x45a049);
+        this.scale.set(0.95);
+        if (this.onPress) this.onPress();
+    }
+
+    private handleRelease = (): void => {
+        this.isPressed = false;
+        this.drawBackground(0x4CAF50);
+        this.scale.set(1);
+        if (this.onRelease) this.onRelease();
+    }
+
+    setCallbacks(onPress: () => void, onRelease: () => void): void {
+        this.onPress = onPress;
+        this.onRelease = onRelease;
+    }
+}
+
+export { TapButton }
