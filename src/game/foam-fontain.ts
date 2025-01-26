@@ -6,6 +6,7 @@ class FoamParticle extends PIXI.Sprite {
     acceleration: { x: number; y: number };
     life: number;
     maxLife: number;
+    initialScale: number;
 
     constructor(texture: PIXI.Texture) {
         super(texture);
@@ -13,37 +14,33 @@ class FoamParticle extends PIXI.Sprite {
     }
 
     reset(): void {
-        this.life = 10.0;
-        this.maxLife = 5.5 + Math.random() * 0.5;
-        this.alpha = 0.8;
-        this.scale.set(0.8 + Math.random() * 0.4);
+        this.life = this.maxLife = 1.5;
+        this.alpha = 1.0;
+        this.initialScale = 3;
+        this.scale.set(this.initialScale);
 
         const angle = (Math.random() * Math.PI) - Math.PI/2;
-        const speed = (2 + Math.random() * 3) / 10;
-
+        const speed = (2 + Math.random() * 2)/5;
         this.velocity = {
-            x: Math.cos(angle) * speed,
-            y: Math.sin(angle) * speed - 4
+            x: Math.cos(angle) * speed * (Math.random() > .5 ? 1 : -1),
+            y: Math.sin(angle) * speed - 2
         };
-
         this.acceleration = {
             x: 0,
-            y: 0.2
+            y: 0.1
         };
     }
 
     update(delta: number): boolean {
-        this.velocity.x += this.acceleration.x * delta;
-        this.velocity.y += this.acceleration.y * delta;
-
+        this.velocity.x += this.acceleration.x;
+        this.velocity.y += this.acceleration.y;
         this.x += this.velocity.x;
         this.y += this.velocity.y;
+        this.life -= 0.016;
 
-        this.life -= delta;
-        this.alpha = Math.min(0.8, (this.life / this.maxLife) * 0.8);
-        this.scale.set(
-            (0.8 + Math.random() * 0.4) * (this.life / this.maxLife)
-        );
+        const lifeRatio = this.life / this.maxLife;
+        this.alpha = lifeRatio;
+        this.scale.set(this.initialScale * lifeRatio);
 
         return this.life > 0;
     }
@@ -56,7 +53,6 @@ class FoamFountain {
     private particles: FoamParticle[];
     private cup: Cup;
     private emissionRate: number;
-    private maxParticles: number;
     private updateBound: (delta: number) => void;
 
     constructor(app: PIXI.Application, cup: Cup) {
@@ -69,39 +65,43 @@ class FoamFountain {
         this.app.stage.addChild(this.container);
 
         this.particles = [];
-        this.emissionRate = 3;
+        this.emissionRate = 25;  // Increased emission rate
 
         const graphics = new PIXI.Graphics();
         graphics.beginFill(0xFFFFFF, 1);
-        graphics.drawCircle(0, 0, 5);
+        graphics.drawCircle(0, 0, 3);  // Smaller particles
         graphics.endFill();
-
         this.particleTexture = app.renderer.generateTexture(graphics);
+
         this.updateBound = this.update.bind(this);
         this.app.ticker.add(this.updateBound);
     }
 
     private onOverflow(): void {
-        console.log('Overflow detected');
+        this.emissionRate = 20;
+        for (let i = 0; i < 100; i++) {  // Emit more particles on overflow
+            this.emitParticle();
+        }
+    }
+
+    private emitParticle(): void {
+        const particle = new FoamParticle(this.particleTexture);
+        const liquidTop = this.cup.y + this.cup.height - (this.cup.height * this.cup.liquid) / 100;
+
+        particle.position.x = this.cup.x + Math.random() * this.cup.width;
+        particle.position.y = liquidTop;
+        particle.tint = 0xFFFACD;
+
+        this.particles.push(particle);
+        this.container.addChild(particle);
     }
 
     private update(delta: number): void {
-        const liquidTop = this.cup.y + this.cup.height - (this.cup.height * this.cup.liquid) / 100;
-        this.container.position.set(
-            0, 0
-        );
-
-        if (this.cup.liquid >= 0) {
-            // const particlesToEmit = Math.round(this.emissionRate * ((this.cup.liquid - 95) / 5));
-            const particlesToEmit = 10;
-
-            for (let i = 0; i < particlesToEmit; i++) {
-                const particle = new FoamParticle(this.particleTexture);
-                particle.position.x = this.cup.x + Math.random() * this.cup.width;
-                particle.position.y = liquidTop - 10;
-                particle.tint = 0xFFFACD;
-                this.particles.push(particle);
-                this.container.addChild(particle);
+        // Emit particles when liquid level is high enough
+        if (this.cup.liquid >= 98) {  // Lowered threshold
+            this.emissionRate = 1;
+            for (let i = 0; i < this.emissionRate; i++) {
+                this.emitParticle();
             }
         }
 
