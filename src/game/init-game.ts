@@ -6,6 +6,7 @@ import { Scene } from "./scene";
 import { Cup } from "./cup";
 import { BeerParticle, BeerParticleSystem } from "./beer-particle-system";
 import { TapButton } from "./tap-button";
+import { FoamFountain } from "./foam-fontain";
 
 const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -41,7 +42,7 @@ export function initGame(app: Application) {
     // makeSprite("main/bg.png", cx, cy);
     const sprite = new Sprite(Texture.from("/bg.jpeg"));
     sprite.scale.set(.8, .8);
-    pixiApp.stage.addChild(sprite);
+    // pixiApp.stage.addChild(sprite);
 
     const scene = makeScene(cx, cy);
 
@@ -87,6 +88,7 @@ export function initGame(app: Application) {
 
     const cup = new Cup({ x: 350, y: 250 });
     beerTap.setCup(cup)
+    const foamFountain = new FoamFountain(app, cup);
 
     pixiApp.stage.addChild(cup.graphics);
     // pixiApp.view.addEventListener('mousedown', () => {

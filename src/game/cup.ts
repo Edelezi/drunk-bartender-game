@@ -1,3 +1,4 @@
+import { Signal } from '#src/common/signal';
 import { pixiApp } from '#src/pixi/pixi-init';
 import * as PIXI from 'pixi.js';
 
@@ -55,6 +56,7 @@ class Cup {
     foamDecayRate: number;
     bubbles: Bubble[];
     bubbleSpawnRate: number;
+    overflow: Signal<void> = new Signal();
 
     constructor({ x, y }: CupProps) {
         this.liquid = 0;
@@ -100,6 +102,7 @@ class Cup {
         if (this.liquid + this.foam >= 100) {
             this.foam = 100 - this.liquid;
             console.log('liquid overflow');
+            this.overflow.dispatch()
             return;
         }
 
