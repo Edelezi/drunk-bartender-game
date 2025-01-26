@@ -1,17 +1,27 @@
 import { Signal } from "#src/common/signal";
 import { Cup } from "#src/game/cup";
+import { Text } from "pixi.js";
 
 export class ClientModel {
     private readonly _id: number;
     private readonly _name: string;
     private readonly _waitingTime: number;
     private readonly _cup: Cup;
+    private readonly _progressText: Text;
+    public timeLeft: number = 0;
 
     constructor(waitingTime: number, name: string, id: number) {
         this._waitingTime = waitingTime;
+        this.timeLeft = waitingTime;
         this._name = name;
         this._id = id;
         this._cup = new Cup({ x: 0, y: 0 });
+        this._progressText = new Text("", { fill: 0xffffff });
+        this._progressText.anchor.set(0.5);
+    }
+
+    public get progressText() {
+        return this._progressText;
     }
 
     public get cup() {

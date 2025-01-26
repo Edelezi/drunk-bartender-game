@@ -40,9 +40,17 @@ export class Scene {
             client.cup.draw();
         });
 
+        this.ticker.add({
+            step(delta: number) {
+                client.timeLeft -= delta;
+                client.progressText.text = (client.timeLeft / 1000).toFixed(0) + "s";
+            }
+        });
+
         seat.removeChildren();
         client.cup.container.scale.set(0.5, 0.5);
         client.cup.container.visible = true;
+        seat.addChild(client.progressText);
         seat.addChild(client.cup.container);
     }
 

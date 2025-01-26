@@ -12,6 +12,6 @@ export const getRandomNumber = (min: number, max: number): number => {
 export const generateClients = (count: number) => {
     return Array.from({ length: count }, (_, index) => {
         const _name = clientNames[index % clientNames.length]; // Loop through names if count exceeds the array length
-        return new ClientModel(getRandomNumber(2, 5) * 1000, _name, index);
+        return new ClientModel(getRandomNumber(15, 30) * 1000, _name, index);
     });
 };
