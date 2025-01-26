@@ -19,7 +19,7 @@ class CongratulationMessage {
         // Create semi-transparent background
         this.background = new PIXI.Graphics();
         this.background.beginFill(0x000000, 0.8);
-        this.background.drawRect(-100 + 400, 177 + 169, 450, 169);
+        this.background.drawRect(0, 0, 100, 100);
         this.background.endFill();
         this.container.addChild(this.background);
 
@@ -40,6 +40,7 @@ class CongratulationMessage {
             fill: '#ffffff',
         });
 
+
         const subtitleStyle = new PIXI.TextStyle({
             fontFamily: 'Arial',
             fontSize: 24,
@@ -50,12 +51,12 @@ class CongratulationMessage {
         this.messageText = new PIXI.Text('', titleStyle);
         this.messageText.anchor.set(0.5);
         this.messageText.x = app.screen.width / 2;
-        this.messageText.y = app.screen.height / 2 - 50;
+        this.messageText.y = app.screen.height / 2 - 100;
 
         this.percentageText = new PIXI.Text('', subtitleStyle);
         this.percentageText.anchor.set(0.5);
         this.percentageText.x = app.screen.width / 2;
-        this.percentageText.y = app.screen.height / 2;
+        this.percentageText.y = app.screen.height / 2 - 50;
 
         this.gradeText = new PIXI.Text('', subtitleStyle);
         this.gradeText.anchor.set(0.5);
@@ -76,12 +77,12 @@ class CongratulationMessage {
 
         const buttonGraphics = new PIXI.Graphics();
         buttonGraphics.beginFill(0x4CAF50);
-        buttonGraphics.drawRoundedRect(-50, -20, 100, 40, 8);
+        buttonGraphics.drawRoundedRect(-50, -20, 150, 60, 8);
         buttonGraphics.endFill();
 
         const buttonText = new PIXI.Text('Shut up', {
             fontFamily: 'Arial',
-            fontSize: 20,
+            fontSize: 30,
             fill: '#ffffff',
         });
         buttonText.anchor.set(0.5);
@@ -174,15 +175,22 @@ class CongratulationMessage {
         this.gradeText.text = grade;
         this.container.visible = true;
 
+        this.background.width = Math.max(this.messageText.width,
+            this.percentageText.width) * 1.5;
+        this.background.height = this.percentageText.height +
+            this.gradeText.height + this.messageText.height + 150;
+        this.background.position.x = this.messageText.x - this.background.width/2;
+        this.background.position.y = this.messageText.y - 40;
+
         // Add fade-in animation
         this.container.alpha = 0;
         this.app.ticker.add(this.fadeIn, this);
         this.character.visible = true;
 
-        // this.hideTimeout = setTimeout(() => {
-        //     this.character.visible = false;
-        //     this.hide();
-        // }, 4000);
+        this.hideTimeout = setTimeout(() => {
+            this.character.visible = false;
+            this.hide();
+        }, 4000);
     }
 
     private fadeIn(): void {
