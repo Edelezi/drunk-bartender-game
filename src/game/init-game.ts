@@ -96,14 +96,15 @@ export function initGame(app: Application) {
     const dcc = new DrunkenCupController({ x: cup.x - 60/2, y: cup.y, swayAmplitude: 60, swayFrequency: 0.07, cup});
 
     const congratulationMessage = new CongratulationMessage(pixiApp);
-    const nextBtn = new NextButton(
-        300,
-        480,
-        150,
-        50
+
+    const doneBtn = new NextButton(
+        426,
+        754,
+        183,
+        106
     );
-    app.stage.addChild(nextBtn);
-    nextBtn.setCallbacks(
+    app.stage.addChild(doneBtn);
+    doneBtn.setCallbacks(
         () => () => {},
         () => {
             congratulationMessage.show(cup.liquid);
@@ -141,7 +142,7 @@ export function initGame(app: Application) {
         fontSize: 50,
         fill: '#FFFFFF'
     });
-    fillPercentage.position.set(411, 760);
+    fillPercentage.position.set(411, 160);
     pixiApp.stage.addChild(fillPercentage);
 
     pixiApp.ticker.add((delta: number) => {

@@ -1,19 +1,24 @@
 import * as PIXI from 'pixi.js';
 
 class NextButton extends PIXI.Container {
-    private background: PIXI.Graphics;
+    // private background: PIXI.Graphics;
     private label: PIXI.Text;
     private isPressed: boolean = false;
     private onPress: () => void;
     private onRelease: () => void;
+    private background: PIXI.Sprite;
 
-    constructor(x: number, y: number, width: number, height: number, private labelText: string = 'next') {
+    constructor(x: number, y: number, width: number = 0, height: number = 0, private labelText: string = 'next') {
         super();
         this.x = x;
         this.y = y;
 
         // Create button background
-        this.background = new PIXI.Graphics();
+        this.background = new PIXI.Sprite(PIXI.Texture.from("/assets/done.png"));
+        if (width !== 0 && height !== 0) {
+            this.background.width = width;
+            this.background.height = height;
+        }
         this.addChild(this.background);
 
         // Create button text
@@ -45,14 +50,13 @@ class NextButton extends PIXI.Container {
     }
 
     private drawBackground(color: number): void {
-        this.background.clear();
-        this.background.beginFill(color);
-        this.background.drawRoundedRect(0, 0, this.label.width + 40, this.label.height + 20, 8);
-        this.background.endFill();
+        // this.background.clear();
+        // this.background.beginFill(color);
+        // this.background.drawRoundedRect(0, 0, this.label.width + 40, this.label.height + 20, 8);
+        // this.background.endFill();
 
-        // Add shadow/highlight effect
-        this.background.lineStyle(2, this.isPressed ? 0x368a3a : 0x5dbf61);
-        this.background.drawRoundedRect(0, 0, this.label.width + 40, this.label.height + 20, 8);
+        // this.background.lineStyle(2, this.isPressed ? 0x368a3a : 0x5dbf61);
+        // this.background.drawRoundedRect(0, 0, this.label.width + 40, this.label.height + 20, 8);
     }
 
     private handlePress = (): void => {
