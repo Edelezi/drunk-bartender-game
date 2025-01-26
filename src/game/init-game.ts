@@ -116,6 +116,7 @@ export function initGame(app: Application) {
     );
 
     const tapButton = new TapButton(800, 650, 426 / 2, 456 / 2);
+    tapButton.visible = false;
 
     app.stage.addChild(tapButton);
     tapButton.setCallbacks(
@@ -168,6 +169,7 @@ export function initGame(app: Application) {
     }, this);
 
     const doneBtn = new NextButton(426, 754, 183, 106);
+    doneBtn.visible = false;
     app.stage.addChild(doneBtn);
     doneBtn.setCallbacks(
         () => () => {},
@@ -188,9 +190,9 @@ export function initGame(app: Application) {
             gameStartSignal.dispatch();
         }
     );
-    window.setTimeout(() => {
-        gameStartSignal.dispatch();
-    }, 500);
+    // window.setTimeout(() => {
+    //     gameStartSignal.dispatch();
+    // }, 500);
 
     const instructions = new Text("Hold mouse button to fill the cup", {
         fontSize: 16,
