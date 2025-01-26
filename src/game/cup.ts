@@ -57,6 +57,7 @@ class Cup {
     bubbles: Bubble[];
     bubbleSpawnRate: number;
     overflow: Signal<void> = new Signal();
+    deltaSeconds: number; //delta from preivous frame
 
     constructor({ x, y }: CupProps) {
         this.liquid = 0;
@@ -67,7 +68,8 @@ class Cup {
         this.width = 60;
         this.height = 100;
         this.isPouring = false;
-        this.liquidFillRate = 0.4;
+        // this.liquidFillRate = (5 + Math.random() * 5) / 100000;
+        this.liquidFillRate = 0.000001; // 5% per second
         this.foamFillRate = this.liquidFillRate * (Math.random() * 1.7 + 0.3);
         this.foamDecayRate = 0.1;
         this.bubbles = [];
@@ -95,6 +97,7 @@ class Cup {
 
         // Foam decrease over time
         if (this.foam > 4) {
+            //TODO convert extra foam to beer
             this.foam = Math.max(4, this.foam - this.foamDecayRate * delta);
         }
 
@@ -106,17 +109,22 @@ class Cup {
             return;
         }
 
-        if (this.isPouring) {
-            const totalContent = this.liquid + this.foam;
-            if (totalContent < 100) {
-                const remainingSpace = 100 - totalContent;
-                const liquidIncrease = Math.min(remainingSpace, this.liquidFillRate);
-                const foamIncrease = Math.min(remainingSpace - liquidIncrease, this.foamFillRate);
+        // Convert delta to seconds
+        this.deltaSeconds = delta / 1000;
+        if (this.isPouring)
+            this.pour(this.deltaSeconds);
+    }
 
-                this.liquid += liquidIncrease;
-                this.foam += foamIncrease;
-            }
-            this.isPouring = false
+    pour(deltaSeconds) {
+        const totalContent = this.liquid + this.foam;
+        if (totalContent < 100) {
+            const remainingSpace = 100 - totalContent;
+            // Apply fill rates per second
+            const liquidIncrease = Math.min(remainingSpace, this.liquidFillRate * deltaSeconds);
+            const foamIncrease = Math.min(remainingSpace - liquidIncrease, this.foamFillRate * deltaSeconds);
+
+            this.liquid += liquidIncrease;
+            this.foam += foamIncrease;
         }
     }
 

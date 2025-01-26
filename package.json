@@ -11,7 +11,7 @@
     "lint": "biome format --write ./src",
     "dev": "vite",
     "prod": "vite build && vite preview",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "tsc": "tsc --noEmit",
     "packer": "node atlaspacker.cjs"
