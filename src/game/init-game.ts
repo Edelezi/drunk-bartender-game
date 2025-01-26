@@ -10,7 +10,7 @@ import { FoamFountain } from "./foam-fontain";
 import { DrunkenCupController } from "./drunken-cup-controller";
 import { NextButton } from "./next-button";
 import { ZoomBlurFilter } from "@pixi/filter-zoom-blur";
-import { clientSelectSignal, gameStartSignal } from "#src/signals/game";
+import { beerDoneSignal, clientSelectSignal, gameStartSignal } from "#src/signals/game";
 import { clientLeaveSignal, ClientModel } from "#src/model/barModel";
 import { CongratulationMessage } from "./congratulations-message";
 
@@ -97,6 +97,7 @@ export function initGame(app: Application) {
     document.body.appendChild(pixiApp.view as any);
 
     mainCup = new Cup({ x: 512, y: 550 });
+    mainCup.container.visible = false;
     beerTap.setCup(mainCup);
     clientSelectSignal.add(({ client, spot }: { client: ClientModel; spot: number }) => {
         if (_selectedClient) {
@@ -122,7 +123,7 @@ export function initGame(app: Application) {
 
     pixiApp.stage.addChild(mainCup.container);
 
-    const dcc = new DrunkenCupController({ x: mainCup.x - 60 / 2, y: mainCup.y, swayAmplitude: 60, swayFrequency: 0.07, cup:mainCup });
+    const dcc = new DrunkenCupController({ x: mainCup.x - 60 / 2, y: mainCup.y, swayAmplitude: 60, swayFrequency: 0.07, cup: mainCup });
 
     const congratulationMessage = new CongratulationMessage(pixiApp);
 
@@ -131,6 +132,7 @@ export function initGame(app: Application) {
     doneBtn.setCallbacks(
         () => () => {},
         () => {
+            beerDoneSignal.dispatch(_selectedSpot);
             congratulationMessage.show(mainCup.liquid);
             mainCup.liquid = 0;
             mainCup.foam = 0;

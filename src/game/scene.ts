@@ -3,7 +3,7 @@ import { assert, Ticker } from "../common";
 import { barSpots, clientArrivedSignal, clientLeaveSignal, ClientModel } from "#src/model/barModel";
 import { GameController } from "#src/game/gameController";
 import { level1 } from "#src/model/levelModel";
-import { clientSelectSignal, gameStartSignal } from "#src/signals/game";
+import { beerDoneSignal, clientSelectSignal, gameStartSignal } from "#src/signals/game";
 import { pixiApp } from "#src/pixi/pixi-init";
 
 let previousTimeStamp = -1;

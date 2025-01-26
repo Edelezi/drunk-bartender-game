@@ -1,6 +1,7 @@
 import { LevelModel } from "#src/model/levelModel";
 import { BarModel, ClientModel } from "#src/model/barModel";
 import { getRandomNumber } from "#src/helpers/gameHelpers";
+import { beerDoneSignal, gameFinishSignal } from "#src/signals/game";
 
 export class GameController {
     private _currentLevel: LevelModel | undefined;
@@ -9,6 +10,7 @@ export class GameController {
 
     constructor() {
         this._barModel = new BarModel();
+        beerDoneSignal.add(this.onBeerDone, this);
     }
 
     public get barModel() {
@@ -48,8 +50,14 @@ export class GameController {
         }
     }
 
+    private onBeerDone(spot: number): void {
+        console.log("onBeerDone");
+        this._barModel.removeClient(spot);
+    }
+
     private finishGame(): void {
         console.log("Game finished");
+        gameFinishSignal.dispatch();
     }
 
     public startGame(level: LevelModel): void {
