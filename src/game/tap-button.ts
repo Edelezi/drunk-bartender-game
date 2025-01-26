@@ -1,19 +1,25 @@
 import * as PIXI from 'pixi.js';
 
 class TapButton extends PIXI.Container {
-    private background: PIXI.Graphics;
+    private background: PIXI.Sprite;
     private label: PIXI.Text;
     private isPressed: boolean = false;
     private onPress: () => void;
     private onRelease: () => void;
 
-    constructor(x: number, y: number, width: number, height: number) {
+    constructor(x: number, y: number, width: number = 0, height: number = 0) {
         super();
         this.x = x;
         this.y = y;
 
         // Create button background
-        this.background = new PIXI.Graphics();
+        // this.background = new PIXI.Graphics();
+        // this.addChild(this.background);
+        this.background = new PIXI.Sprite(PIXI.Texture.from("/assets/tapbtn.png"));
+        if (width !== 0 && height !== 0) {
+            this.background.width = width;
+            this.background.height = height;
+        }
         this.addChild(this.background);
 
         // Create button text
@@ -41,30 +47,30 @@ class TapButton extends PIXI.Container {
         this.on('touchstart', this.handlePress);
         this.on('touchend', this.handleRelease);
         this.on('touchendoutside', this.handleRelease);
-        this.drawBackground(0x4CAF50);
+        // this.drawBackground(0x4CAF50);
     }
 
-    private drawBackground(color: number): void {
-        this.background.clear();
-        this.background.beginFill(color);
-        this.background.drawRoundedRect(0, 0, this.label.width + 40, this.label.height + 20, 8);
-        this.background.endFill();
+    // private drawBackground(color: number): void {
+    //     this.background.clear();
+    //     this.background.beginFill(color);
+    //     this.background.drawRoundedRect(0, 0, this.label.width + 40, this.label.height + 20, 8);
+    //     this.background.endFill();
 
-        // Add shadow/highlight effect
-        this.background.lineStyle(2, this.isPressed ? 0x368a3a : 0x5dbf61);
-        this.background.drawRoundedRect(0, 0, this.label.width + 40, this.label.height + 20, 8);
-    }
+    //     // Add shadow/highlight effect
+    //     this.background.lineStyle(2, this.isPressed ? 0x368a3a : 0x5dbf61);
+    //     this.background.drawRoundedRect(0, 0, this.label.width + 40, this.label.height + 20, 8);
+    // }
 
     private handlePress = (): void => {
         this.isPressed = true;
-        this.drawBackground(0x45a049);
+        // this.drawBackground(0x45a049);
         this.scale.set(0.95);
         if (this.onPress) this.onPress();
     }
 
     private handleRelease = (): void => {
         this.isPressed = false;
-        this.drawBackground(0x4CAF50);
+        // this.drawBackground(0x4CAF50);
         this.scale.set(1);
         if (this.onRelease) this.onRelease();
     }

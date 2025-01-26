@@ -71,10 +71,10 @@ export function initGame(app: Application) {
     });
 
     const tapButton = new TapButton(
-        300,
-        400,
-        150,
-        50
+        800,
+        650,
+        424/2,
+        429/2
     );
     app.stage.addChild(tapButton);
     tapButton.setCallbacks(
