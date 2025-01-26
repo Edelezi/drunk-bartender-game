@@ -6,6 +6,7 @@ export const gameState = {
     roundPoints: 0,
     addPoints(points: number) {
         this.roundPoints += points;
+        this.roundPoints = Math.max(0, this.roundPoints);
         pointsUpdatedSignal.dispatch(this.roundPoints);
     }
 };

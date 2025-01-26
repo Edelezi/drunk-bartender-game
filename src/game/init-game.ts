@@ -68,7 +68,7 @@ export function initGame(app: Application) {
         fill: "#FFFFFF"
     });
 
-    pointText.position.set(20, 20);
+    pointText.position.set(800, 20);
     pixiApp.stage.addChild(pointText);
 
     pointsUpdatedSignal.add((points: number) => {

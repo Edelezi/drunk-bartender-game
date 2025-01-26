@@ -2,6 +2,7 @@ import { Signal } from "#src/common/signal";
 import { Cup } from "#src/game/cup";
 import { Text } from "pixi.js";
 import { gameFinishSignal } from "#src/signals/game";
+import { gameState } from "#src/model/gameState";
 
 export class ClientModel {
     private readonly _id: number;
@@ -82,6 +83,8 @@ export class BarModel {
             spot
         });
         this._timerIds[spot] = window.setTimeout(() => {
+            const points = Math.min(10, client.waitingTime / 1000);
+            gameState.addPoints(-points);
             this.removeClient(spot);
             clientTimeoutSignal.dispatch({
                 client,
