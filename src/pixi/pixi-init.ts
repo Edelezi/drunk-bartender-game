@@ -1,6 +1,7 @@
 import { loadAssets } from "#src/game/atlas";
 import { Application, Graphics } from "pixi.js";
 
+export let isBtnDebug = false;
 export let pixiApp: Application;
 let canvas: HTMLCanvasElement;
 

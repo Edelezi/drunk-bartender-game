@@ -14,6 +14,8 @@ import { beerDoneSignal, clientSelectSignal, gameStartSignal } from "#src/signal
 import { clientLeaveSignal, ClientModel } from "#src/model/barModel";
 import { CongratulationMessage } from "./congratulations-message";
 import { Ticker } from "#src/common";
+import { StartButton } from "./start-button";
+import { isBtnDebug } from "#src/pixi/pixi-init";
 
 const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -148,7 +150,7 @@ export function initGame(app: Application) {
         }
     );
 
-    const startGameBtn = new NextButton(300, 580, 150, 50, "start");
+    const startGameBtn = new StartButton(10, 10, 113, 66, "start");
     app.stage.addChild(startGameBtn);
     startGameBtn.setCallbacks(
         () => () => undefined,
@@ -164,7 +166,7 @@ export function initGame(app: Application) {
         fontSize: 16,
         fill: "#FFFFFF"
     });
-    instructions.position.set(300, 20);
+    instructions.position.set(400, 5);
     pixiApp.stage.addChild(instructions);
 
     const fillPercentage = new Text("", {
@@ -172,8 +174,8 @@ export function initGame(app: Application) {
         fill: "#FFFFFF"
     });
     fillPercentage.position.set(411, 160);
+    fillPercentage.visible = isBtnDebug;
     pixiApp.stage.addChild(fillPercentage);
-
 
 
     pixiApp.ticker.add((delta: number) => {

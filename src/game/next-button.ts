@@ -1,3 +1,4 @@
+import { isBtnDebug } from '#src/pixi/pixi-init';
 import * as PIXI from 'pixi.js';
 
 class NextButton extends PIXI.Container {
@@ -33,6 +34,7 @@ class NextButton extends PIXI.Container {
         this.label.anchor.set(0.5);
         this.label.x = width / 2 - this.label.width/2;
         this.label.y = height / 2;
+        this.label.visible = isBtnDebug;
         this.addChild(this.label);
 
         // Make interactive
