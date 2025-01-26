@@ -8,6 +8,7 @@ import { BeerParticle, BeerParticleSystem } from "./beer-particle-system";
 import { TapButton } from "./tap-button";
 import { FoamFountain } from "./foam-fontain";
 import { DrunkenCupController } from "./drunken-cup-controller";
+import { NextButton } from "./next-button";
 
 const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -41,9 +42,11 @@ export function initGame(app: Application) {
     const cy = 390;
 
     // makeSprite("main/bg.png", cx, cy);
-    const sprite = new Sprite(Texture.from("/bg.jpeg"));
-    sprite.scale.set(.8, .8);
-    // pixiApp.stage.addChild(sprite);
+    const barBack = new Sprite(Texture.from("/assets/bar.png"));
+    barBack.name = 'barback';
+    const backScale = .5;
+    barBack.scale.set(backScale, backScale);
+    pixiApp.stage.addChild(barBack);
 
     const scene = makeScene(cx, cy);
 
@@ -58,30 +61,25 @@ export function initGame(app: Application) {
         scene
     };
 
-    const beerTap = new BeerParticleSystem(app, { x: 400, y: 100 }, {
+    const beerTap = new BeerParticleSystem(app, { x: 515, y: 512 }, {
         maxParticles: 250,
         emissionRate: 8,
         color: 0xf4e675,
         gravity: 0.15
     });
 
-
-    // app.view.addEventListener('click', () => {
-    //     beerTap.isFlowing ? beerTap.stopFlow() : beerTap.startFlow();
-    // });
-    const button = new TapButton(
+    const tapButton = new TapButton(
         300,
         400,
         150,
         50
     );
-
-    button.setCallbacks(
+    app.stage.addChild(tapButton);
+    tapButton.setCallbacks(
         () => beerTap.startFlow(),
         () => beerTap.stopFlow()
     );
 
-    app.stage.addChild(button);
 
     pixiApp.stage.addChild(scene.container);
 
@@ -94,27 +92,61 @@ export function initGame(app: Application) {
     pixiApp.stage.addChild(cup.graphics);
 
     const dcc = new DrunkenCupController({ x: cup.x, swayAmplitude: 50, swayFrequency: 0.02, cup});
-    // pixiApp.view.addEventListener('mousedown', () => {
-    //     cup.isPouring = true;
-    // });
 
-    // pixiApp.view.addEventListener('mouseup', () => {
-    //     cup.isPouring = false;
-    // });
+    const nextBtn = new NextButton(
+        300,
+        480,
+        150,
+        50
+    );
+    app.stage.addChild(nextBtn);
+    nextBtn.setCallbacks(
+        () => () => {},
+        () => {
+            cup.liquid = 0;
+            cup.foam = 0;
+        }
+    );
 
-    // pixiApp.view.addEventListener('mouseleave', () => {
-    //     cup.isPouring = false;
-    // });
+
+    const startGameBtn = new NextButton(
+        300,
+        580,
+        150,
+        50, "start"
+    );
+    app.stage.addChild(startGameBtn);
+    startGameBtn.setCallbacks(
+        () => () => {},
+        () => {
+            new CustomEvent('start-game', {
+                bubbles: true,
+                cancelable: true,
+              });
+        }
+    );
 
     const instructions = new Text('Hold mouse button to fill the cup', {
         fontSize: 16,
         fill: '#FFFFFF'
     });
-
-    instructions.position.set(10, 10);
+    instructions.position.set(300, 20);
     pixiApp.stage.addChild(instructions);
 
+    const fillPercentage = new Text('', {
+        fontSize: 50,
+        fill: '#FFFFFF'
+    });
+    fillPercentage.position.set(500, 400);
+    pixiApp.stage.addChild(fillPercentage);
+
     pixiApp.ticker.add((delta: number) => {
+        if (cup.liquid >= 100) {
+            fillPercentage.text = 'beer over... bubbled!';
+        } else {
+            fillPercentage.text = 'Fill ' + cup.liquid.toFixed(2) + '%';
+        }
+
         cup.update(delta);
         dcc.update(delta);
         cup.draw();

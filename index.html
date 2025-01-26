@@ -13,26 +13,33 @@
   <!-- <div id="stage"></div> -->
   <canvas id="canvas"></canvas>
 
-  <button onclick="window.dispatchEvent(
+  <!-- <button onclick="window.dispatchEvent(
     new CustomEvent('start-game', {
       bubbles: true,
       cancelable: true,
     }),
-  )">Start game</button>
+  )">Start game</button> -->
 
   <script type="module" src="/src/main.ts"></script>
 </body>
 
 <style>
-  canvas {
-      width: 100%;
-      height: 100%;
-  }
+body {
+    padding: 0;
+    margin: 0;
+    background-color: black;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-  body {
-      padding: 0;
-      margin: 0;
-      background-color: black;
-  }
+canvas {
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 1024px;
+    height: 1024px;
+    object-fit: contain;
+}
 </style>
 </html>
