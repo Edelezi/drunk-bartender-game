@@ -1,6 +1,7 @@
 import * as pixi from "pixi.js";
 import { gameState } from "#src/model/gameState";
 import { gameStartSignal } from "#src/signals/game";
+import * as PIXI from "pixi.js";
 
 class GameFinishMessage {
     private container: pixi.Container;
@@ -12,52 +13,52 @@ class GameFinishMessage {
     private character: pixi.Sprite;
 
     constructor(private app: pixi.Application) {
-        this.container = new pixi.Container();
+        this.container = new PIXI.Container();
         this.container.visible = false;
         this.app.stage.addChild(this.container);
 
         // Create semi-transparent background
-        this.background = new pixi.Graphics();
+        this.background = new PIXI.Graphics();
         this.background.beginFill(0x000000, 0.8);
-        this.background.drawRect(0, 0, app.screen.width, app.screen.height);
+        this.background.drawRect(-100 + 400, 177 + 169, 450, 169);
         this.background.endFill();
         this.container.addChild(this.background);
 
-        const character = new pixi.Sprite(pixi.Texture.from("/assets/guy.png"));
+        const character = new PIXI.Sprite(PIXI.Texture.from("/assets/guy.png"));
         this.character = character;
         character.name = "ilya";
         character.visible = false;
         const scaleChar = 0.5;
         character.scale.set(scaleChar, scaleChar);
-        character.position.set(150, 450);
+        character.position.set(-100, 450);
         this.container.addChild(character);
 
         // Create text styles
-        const titleStyle = new pixi.TextStyle({
+        const titleStyle = new PIXI.TextStyle({
             fontFamily: "Arial",
             fontSize: 36,
             fontWeight: "bold",
             fill: "#ffffff"
         });
 
-        const subtitleStyle = new pixi.TextStyle({
+        const subtitleStyle = new PIXI.TextStyle({
             fontFamily: "Arial",
             fontSize: 24,
             fill: "#ffffff"
         });
 
         // Create text elements
-        this.messageText = new pixi.Text("", titleStyle);
+        this.messageText = new PIXI.Text("", titleStyle);
         this.messageText.anchor.set(0.5);
         this.messageText.x = app.screen.width / 2;
         this.messageText.y = app.screen.height / 2 - 50;
 
-        this.percentageText = new pixi.Text("", subtitleStyle);
+        this.percentageText = new PIXI.Text("", subtitleStyle);
         this.percentageText.anchor.set(0.5);
         this.percentageText.x = app.screen.width / 2;
         this.percentageText.y = app.screen.height / 2;
 
-        this.gradeText = new pixi.Text("", subtitleStyle);
+        this.gradeText = new PIXI.Text("", subtitleStyle);
         this.gradeText.anchor.set(0.5);
         this.gradeText.x = app.screen.width / 2;
         this.gradeText.y = app.screen.height / 2 + 50;
@@ -71,13 +72,22 @@ class GameFinishMessage {
         this.container.addChild(this.messageText, this.percentageText, this.gradeText, this.closeButton);
     }
 
-    private createCloseButton(): pixi.Container {
-        const button = new pixi.Container();
+    private createCloseButton(): PIXI.Container {
+        const button = new PIXI.Container();
 
-        const buttonGraphics = new pixi.Graphics();
+        const buttonGraphics = new PIXI.Graphics();
         buttonGraphics.beginFill(0x4caf50);
         buttonGraphics.drawRoundedRect(-50, -20, 100, 40, 8);
         buttonGraphics.endFill();
+
+        const buttonText = new PIXI.Text("Start new", {
+            fontFamily: "Arial",
+            fontSize: 20,
+            fill: "#ffffff"
+        });
+        buttonText.anchor.set(0.5);
+
+        button.addChild(buttonGraphics, buttonText);
 
         button.eventMode = "static";
         button.cursor = "pointer";

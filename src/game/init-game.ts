@@ -72,6 +72,22 @@ export function initGame(app: Application) {
     pointText.position.set(800, 20);
     pixiApp.stage.addChild(pointText);
 
+    gameStartSignal.add(() => {
+        pointText.visible = true;
+        doneBtn.visible = true;
+        startGameBtn.visible = false;
+        tapButton.visible = true;
+        _gameFinishMessage.hide();
+    }, this);
+
+    gameFinishSignal.add(() => {
+        pointText.visible = false;
+        doneBtn.visible = false;
+        startGameBtn.visible = true;
+        tapButton.visible = false;
+        _gameFinishMessage.show();
+    }, this);
+
     pointsUpdatedSignal.add((points: number) => {
         pointText.text = points.toFixed(0);
     });
@@ -147,10 +163,6 @@ export function initGame(app: Application) {
     const congratulationMessage = new CongratulationMessage(pixiApp);
 
     const _gameFinishMessage = new GameFinishMessage(pixiApp);
-
-    gameFinishSignal.add(() => {
-        _gameFinishMessage.show();
-    }, this);
 
     const doneBtn = new NextButton(426, 754, 183, 106);
     app.stage.addChild(doneBtn);

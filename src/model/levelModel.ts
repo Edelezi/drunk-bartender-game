@@ -31,8 +31,8 @@ export const getLevel = (level: number): LevelModel => {
 
 export const level1: LevelModel = {
     clients: generateClients(8),
-    minGapTime: 1,
-    maxGapTime: 3
+    minGapTime: 3,
+    maxGapTime: 15
 };
 
 export const level2: LevelModel = {
