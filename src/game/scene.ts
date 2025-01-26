@@ -4,6 +4,7 @@ import { barSpots, clientArrivedSignal, clientLeaveSignal, ClientModel } from "#
 import { GameController } from "#src/game/gameController";
 import { level1 } from "#src/model/levelModel";
 import { clientSelectSignal, gameStartSignal } from "#src/signals/game";
+import { pixiApp } from "#src/pixi/pixi-init";
 
 let previousTimeStamp = -1;
 
@@ -34,6 +35,10 @@ export class Scene {
     onClientArrived({ client, spot }: { client: ClientModel; spot: number }) {
         const seat = this.container.getChildByName("seat" + spot) as Container;
         assert("spot not found", !seat);
+        pixiApp.ticker.add((delta: number) => {
+            client.cup.update(delta);
+            client.cup.draw();
+        });
 
         seat.removeChildren();
         client.cup.container.scale.set(0.5, 0.5);
@@ -78,7 +83,7 @@ export class Scene {
     }
 
     private selectSpot(pos: number) {
-        if (this.selectedClientSpot) {
+        if (this.selectedClientSpot >= 0) {
             const prevClient = this.gameController.barModel.getClient(this.selectedClientSpot);
             prevClient.cup.container.visible = true;
         }
