@@ -73,21 +73,19 @@ export function initGame(app: Application) {
         scene
     };
 
-    const beerTap = new BeerParticleSystem(app, { x: 515, y: 512 }, {
-        maxParticles: 250,
-        emissionRate: 8,
-        color: 0xf4e675,
-        gravity: 0.15
-    });
-
-    const tapButton = new TapButton(
-        800,
-        650,
-        426/2,
-        456/2
+    const beerTap = new BeerParticleSystem(
+        app,
+        { x: 515, y: 512 },
+        {
+            maxParticles: 250,
+            emissionRate: 8,
+            color: 0xf4e675,
+            gravity: 0.15
+        }
     );
 
-    const tapButton = new TapButton(300, 400, 150, 50);
+    const tapButton = new TapButton(800, 650, 426 / 2, 456 / 2);
+
     app.stage.addChild(tapButton);
     tapButton.setCallbacks(
         () => beerTap.startFlow(),
@@ -124,21 +122,18 @@ export function initGame(app: Application) {
 
     pixiApp.stage.addChild(mainCup.container);
 
+    const dcc = new DrunkenCupController({ x: mainCup.x - 60 / 2, y: mainCup.y, swayAmplitude: 60, swayFrequency: 0.07, mainCup });
+
     const congratulationMessage = new CongratulationMessage(pixiApp);
 
-    const doneBtn = new NextButton(
-        426,
-        754,
-        183,
-        106
-    );
+    const doneBtn = new NextButton(426, 754, 183, 106);
     app.stage.addChild(doneBtn);
     doneBtn.setCallbacks(
         () => () => {},
         () => {
-            congratulationMessage.show(cup.liquid);
-            cup.liquid = 0;
-            cup.foam = 0;
+            congratulationMessage.show(mainCup.liquid);
+            mainCup.liquid = 0;
+            mainCup.foam = 0;
             mainCup.container.visible = false;
         }
     );
