@@ -1,4 +1,3 @@
-import gsap from "gsap";
 import { Application, Ticker } from "pixi.js";
 
 // const subscribeToGSAPTicker = (app: Application) => {

@@ -50,7 +50,7 @@ export class BarModel {
             client,
             spot
         });
-        this._timerIds[spot] = setTimeout(() => {
+        this._timerIds[spot] = window.setTimeout(() => {
             this.removeClient(spot);
             clientTimeoutSignal.dispatch(this, {
                 client,

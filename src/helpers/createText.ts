@@ -24,7 +24,7 @@ export const createText = ({ value, x = 0, y = 0, anchor = 0.5, fill = 0x000000 
         text: value,
         anchor,
         ...textBaseAtts
-    } as TextOptions<TextStyle, TextStyleOptions>);
+    } as any);
 
     text.style.fill = fill;
 

@@ -82,7 +82,7 @@ export function initGame(app: Application) {
 
     pixiApp.stage.addChild(scene.container);
 
-    document.body.appendChild(pixiApp.view);
+    document.body.appendChild(pixiApp.view as any);
 
     const cup = new Cup({ x: 350, y: 250 });
     pixiApp.stage.addChild(cup.graphics);
