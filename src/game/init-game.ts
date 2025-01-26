@@ -10,12 +10,13 @@ import { FoamFountain } from "./foam-fontain";
 import { DrunkenCupController } from "./drunken-cup-controller";
 import { NextButton } from "./next-button";
 import { ZoomBlurFilter } from "@pixi/filter-zoom-blur";
-import { beerDoneSignal, clientSelectSignal, gameStartSignal, pointsUpdatedSignal } from "#src/signals/game";
+import { beerDoneSignal, clientSelectSignal, gameFinishSignal, gameStartSignal, pointsUpdatedSignal } from "#src/signals/game";
 import { clientLeaveSignal, ClientModel } from "#src/model/barModel";
 import { CongratulationMessage } from "./congratulations-message";
 import { Ticker } from "#src/common";
 import { StartButton } from "./start-button";
 import { isBtnDebug } from "#src/pixi/pixi-init";
+import { GameFinishMessage } from "#src/game/game-finish-message";
 
 const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -144,6 +145,12 @@ export function initGame(app: Application) {
     const dcc = new DrunkenCupController({ x: mainCup.x - 60 / 2, y: mainCup.y, swayAmplitude: 60, swayFrequency: 0.07, cup: mainCup });
 
     const congratulationMessage = new CongratulationMessage(pixiApp);
+
+    const _gameFinishMessage = new GameFinishMessage(pixiApp);
+
+    gameFinishSignal.add(() => {
+        _gameFinishMessage.show();
+    }, this);
 
     const doneBtn = new NextButton(426, 754, 183, 106);
     app.stage.addChild(doneBtn);
