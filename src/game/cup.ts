@@ -50,7 +50,6 @@ class Cup {
     width: number;
     height: number;
     isPouring: boolean;
-    foamFillRate: number;
     foamDecayRate: number;
     bubbles: Bubble[];
     bubbleSpawnRate: number;
@@ -115,27 +114,7 @@ class Cup {
             this.overflow.dispatch()
             return;
         }
-
-        // Convert delta to seconds
-        // this.deltaSeconds = delta / 1000;
-        // if (this.isPouring)
-            // this.pour(this.deltaSeconds);
     }
-
-    /*
-    pour(deltaSeconds) {
-        const totalContent = this.liquid + this.foam;
-        if (totalContent < 100) {
-            const remainingSpace = 100 - totalContent;
-            // Apply fill rates per second
-            const liquidIncrease = Math.min(remainingSpace, this.liquidFillRate * deltaSeconds);
-            const foamIncrease = Math.min(remainingSpace - liquidIncrease, this.foamFillRate * deltaSeconds);
-
-            this.liquid += liquidIncrease;
-            this.foam += foamIncrease;
-        }
-    }
-    */
 
     draw(): void {
         const g = this.graphics;
@@ -178,29 +157,6 @@ class Cup {
             foamHeight
         );
         g.endFill();
-
-        /*
-        const textBg = new PIXI.Graphics();
-        textBg.beginFill(0xFFFFFF, 0.8);
-        textBg.drawRect(this.x + this.width + 10, this.y, 120, 50);
-        textBg.endFill();
-        pixiApp.stage.addChild(textBg);
-
-        const style = new PIXI.TextStyle({
-            fontSize: 12,
-            fill: '#000000'
-        });
-
-        [
-            { text: `Liquid: ${Math.round(this.liquid)}%`, y: 5 },
-            { text: `Foam: ${Math.round(this.foam)}%`, y: 25 },
-            { text: `Total: ${Math.round(this.liquid + this.foam)}%`, y: 45 }
-        ].forEach(({ text, y }) => {
-            const textSprite = new PIXI.Text(text, style);
-            textSprite.position.set(this.x + this.width + 15, this.y + y);
-            pixiApp.stage.addChild(textSprite);
-        });
-        */
     }
 }
 
