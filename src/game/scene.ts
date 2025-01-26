@@ -109,7 +109,7 @@ export class Scene {
         seat.height = 50;
         seat.interactive = true;
         seat.name = "seat" + pos;
-        seat.addEventListener("click", () => {
+        seat.addEventListener("pointerup", () => {
             if (this.gameController.barModel.getClient(pos)) {
                 this.selectSpot(pos);
             }
