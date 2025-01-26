@@ -20,12 +20,13 @@
     "*.ts": "biome format --staged --write ./src"
   },
   "dependencies": {
+    "@pixi/filter-zoom-blur": "^5.1.1",
     "pixi-spine": "4.0.4",
     "pixi.js": "7.4.2"
   },
   "devDependencies": {
-    "free-tex-packer-core": "^0.3.4",
     "@biomejs/biome": "1.8.1",
+    "free-tex-packer-core": "^0.3.4",
     "husky": "8.0.3",
     "lint-staged": "15.2.7",
     "typescript": "5.4.2",

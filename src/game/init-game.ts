@@ -1,4 +1,4 @@
-import { Application, Sprite, BLEND_MODES, Texture, Text } from "pixi.js";
+import { Application, Sprite, BLEND_MODES, Texture, Text, DisplacementFilter } from "pixi.js";
 import { getSpine, getTexture } from "./atlas";
 import { Spine } from "pixi-spine";
 import { pixiMove } from "#src/pixi/pixi-move";
@@ -9,6 +9,7 @@ import { TapButton } from "./tap-button";
 import { FoamFountain } from "./foam-fontain";
 import { DrunkenCupController } from "./drunken-cup-controller";
 import { NextButton } from "./next-button";
+import {ZoomBlurFilter} from '@pixi/filter-zoom-blur';
 
 const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -151,6 +152,18 @@ export function initGame(app: Application) {
         dcc.update(delta);
         cup.draw();
     });
+
+    // TODO add displacement/twist?
+    // const df = new DisplacementFilter();
+
+    const zbf = new ZoomBlurFilter();
+    zbf.strength = 0.05;
+    zbf.center[0] = 512;
+    zbf.center[1] = 512;
+    zbf.innerRadius = 250;
+    zbf.radius = 750;
+
+    pixiApp.stage.filters = [zbf];
 
     return { game };
 }
