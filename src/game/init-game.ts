@@ -73,8 +73,8 @@ export function initGame(app: Application) {
     const tapButton = new TapButton(
         800,
         650,
-        424/2,
-        429/2
+        426/2,
+        456/2
     );
     app.stage.addChild(tapButton);
     tapButton.setCallbacks(

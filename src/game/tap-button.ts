@@ -15,7 +15,7 @@ class TapButton extends PIXI.Container {
         // Create button background
         // this.background = new PIXI.Graphics();
         // this.addChild(this.background);
-        this.background = new PIXI.Sprite(PIXI.Texture.from("/assets/tapbtn.png"));
+        this.background = new PIXI.Sprite(PIXI.Texture.from("/assets/tapbtn1.png"));
         if (width !== 0 && height !== 0) {
             this.background.width = width;
             this.background.height = height;
@@ -64,13 +64,15 @@ class TapButton extends PIXI.Container {
     private handlePress = (): void => {
         this.isPressed = true;
         // this.drawBackground(0x45a049);
-        this.scale.set(0.95);
+        this.background.texture = PIXI.Texture.from("/assets/tapbtn3.png")
+        this.scale.set(1);
         if (this.onPress) this.onPress();
     }
 
     private handleRelease = (): void => {
         this.isPressed = false;
         // this.drawBackground(0x4CAF50);
+        this.background.texture = PIXI.Texture.from("/assets/tapbtn1.png")
         this.scale.set(1);
         if (this.onRelease) this.onRelease();
     }
