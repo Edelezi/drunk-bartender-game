@@ -9,7 +9,9 @@ import { TapButton } from "./tap-button";
 import { FoamFountain } from "./foam-fontain";
 import { DrunkenCupController } from "./drunken-cup-controller";
 import { NextButton } from "./next-button";
-import {ZoomBlurFilter} from '@pixi/filter-zoom-blur';
+import { ZoomBlurFilter } from "@pixi/filter-zoom-blur";
+import { clientSelectSignal, gameStartSignal } from "#src/signals/game";
+import { clientLeaveSignal, ClientModel } from "#src/model/barModel";
 import { CongratulationMessage } from "./congratulations-message";
 
 const _sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -36,6 +38,14 @@ type Game = {
     scene: Scene;
 };
 
+let mainCup: Cup;
+export function getMainCup() {
+    return mainCup;
+}
+
+let _selectedClient: ClientModel | undefined;
+let _selectedSpot: number | undefined;
+
 export function initGame(app: Application) {
     pixiApp = app;
     // const cx = app.view.width / 2;
@@ -45,8 +55,8 @@ export function initGame(app: Application) {
 
     // makeSprite("main/bg.png", cx, cy);
     const barBack = new Sprite(Texture.from("/assets/bar.png"));
-    barBack.name = 'barback';
-    const backScale = .5;
+    barBack.name = "barback";
+    const backScale = 0.5;
     barBack.scale.set(backScale, backScale);
     pixiApp.stage.addChild(barBack);
 
@@ -76,24 +86,43 @@ export function initGame(app: Application) {
         426/2,
         456/2
     );
+
+    const tapButton = new TapButton(300, 400, 150, 50);
     app.stage.addChild(tapButton);
     tapButton.setCallbacks(
         () => beerTap.startFlow(),
         () => beerTap.stopFlow()
     );
 
-
     pixiApp.stage.addChild(scene.container);
 
     document.body.appendChild(pixiApp.view as any);
 
-    const cup = new Cup({ x: 512, y: 550 });
-    beerTap.setCup(cup)
-    const foamFountain = new FoamFountain(app, cup);
+    mainCup = new Cup({ x: 512, y: 550 });
+    beerTap.setCup(mainCup);
+    clientSelectSignal.add(({ client, spot }: { client: ClientModel; spot: number }) => {
+        if (_selectedClient) {
+            _selectedClient.cup.liquid = mainCup.liquid;
+            _selectedClient.cup.foam = mainCup.foam;
+        }
+        _selectedClient = client;
+        _selectedSpot = spot;
+        mainCup.liquid = client.cup.liquid;
+        mainCup.foam = client.cup.foam;
+        mainCup.container.visible = true;
+    }, this);
 
-    pixiApp.stage.addChild(cup.container);
+    clientLeaveSignal.add(({ spot }: { spot: number }) => {
+        if (_selectedSpot === spot) {
+            _selectedClient = undefined;
+            _selectedSpot = undefined;
+            mainCup.container.visible = false;
+        }
+    }, this);
 
-    const dcc = new DrunkenCupController({ x: cup.x - 60/2, y: cup.y, swayAmplitude: 60, swayFrequency: 0.07, cup});
+    const _foamFountain = new FoamFountain(app, mainCup);
+
+    pixiApp.stage.addChild(mainCup.container);
 
     const congratulationMessage = new CongratulationMessage(pixiApp);
 
@@ -110,51 +139,43 @@ export function initGame(app: Application) {
             congratulationMessage.show(cup.liquid);
             cup.liquid = 0;
             cup.foam = 0;
+            mainCup.container.visible = false;
         }
     );
 
-
-    const startGameBtn = new NextButton(
-        300,
-        580,
-        150,
-        50, "start"
-    );
+    const startGameBtn = new NextButton(300, 580, 150, 50, "start");
     app.stage.addChild(startGameBtn);
     startGameBtn.setCallbacks(
-        () => () => {},
+        () => () => undefined,
         () => {
-            new CustomEvent('start-game', {
-                bubbles: true,
-                cancelable: true,
-              });
+            gameStartSignal.dispatch();
         }
     );
 
-    const instructions = new Text('Hold mouse button to fill the cup', {
+    const instructions = new Text("Hold mouse button to fill the cup", {
         fontSize: 16,
-        fill: '#FFFFFF'
+        fill: "#FFFFFF"
     });
     instructions.position.set(300, 20);
     pixiApp.stage.addChild(instructions);
 
-    const fillPercentage = new Text('', {
+    const fillPercentage = new Text("", {
         fontSize: 50,
-        fill: '#FFFFFF'
+        fill: "#FFFFFF"
     });
     fillPercentage.position.set(411, 160);
     pixiApp.stage.addChild(fillPercentage);
 
     pixiApp.ticker.add((delta: number) => {
-        if (cup.liquid >= 100) {
-            fillPercentage.text = 'beer over... bubbled!';
+        if (mainCup.liquid >= 100) {
+            fillPercentage.text = "beer over... bubbled!";
         } else {
-            fillPercentage.text = 'Fill ' + cup.liquid.toFixed(2) + '%';
+            fillPercentage.text = "Fill " + mainCup.liquid.toFixed(2) + "%";
         }
 
-        cup.update(delta);
+        mainCup.update(delta);
         dcc.update(delta);
-        cup.draw();
+        mainCup.draw();
     });
 
     // TODO add displacement/twist?

@@ -1,18 +1,18 @@
-type CallbackFunction<T extends any> = (...args: T[]) => void;
+type CallbackFunction<T> = (...args: T[]) => void;
 
 interface CallbackEntry<T extends any[]> {
     callback: CallbackFunction<T>;
     context: any;
 }
 
-export class Signal<T extends any> {
+export class Signal<T> {
     private _callbacks: CallbackEntry<T>[] = [];
 
     constructor() {
         this.dispatch = this.dispatch.bind(this);
     }
 
-    add(callback: CallbackFunction<T>, context: any): void {
+    add(callback: CallbackFunction<T>, context?: any): void {
         this._callbacks.push({ callback, context });
     }
 

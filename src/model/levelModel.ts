@@ -9,8 +9,8 @@ export type LevelModel = {
 
 export const level1: LevelModel = {
     clients: generateClients(8),
-    minGapTime: 8,
-    maxGapTime: 15
+    minGapTime: 1,
+    maxGapTime: 3
 };
 
 export const level2: LevelModel = {

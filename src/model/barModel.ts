@@ -1,14 +1,21 @@
 import { Signal } from "#src/common/signal";
+import { Cup } from "#src/game/cup";
 
 export class ClientModel {
     private readonly _id: number;
     private readonly _name: string;
     private readonly _waitingTime: number;
+    private readonly _cup: Cup;
 
     constructor(waitingTime: number, name: string, id: number) {
         this._waitingTime = waitingTime;
         this._name = name;
         this._id = id;
+        this._cup = new Cup({ x: 0, y: 0 });
+    }
+
+    public get cup() {
+        return this._cup;
     }
 
     public get waitingTime() {
@@ -41,18 +48,23 @@ export class BarModel {
         }
     }
 
+    public getClient(spot: number) {
+        return this._spots[spot];
+    }
+
     public addClient(client: ClientModel, spot: number) {
+        console.log("addClient");
         if (this._spots[spot]) {
             throw new Error("spot is already taken");
         }
         this._spots[spot] = client;
-        clientArrivedSignal.dispatch(this, {
+        clientArrivedSignal.dispatch({
             client,
             spot
         });
         this._timerIds[spot] = window.setTimeout(() => {
             this.removeClient(spot);
-            clientTimeoutSignal.dispatch(this, {
+            clientTimeoutSignal.dispatch({
                 client,
                 spot
             });
@@ -65,6 +77,18 @@ export class BarModel {
         }
         clearTimeout(this._timerIds[spot] as number);
         this._spots[spot] = undefined;
-        clientLeaveSignal.dispatch(this, { spot });
+        clientLeaveSignal.dispatch({ spot });
+    }
+
+    public getFreeSpot(): number {
+        return this._spots.findIndex(spot => !spot);
+    }
+
+    public getRandomFreeSpot(): number {
+        const freeSpots = this._spots.map((spot, index) => (spot ? -1 : index)).filter(spot => spot !== -1);
+        if (!freeSpots.length) {
+            throw new Error("no free spots");
+        }
+        return freeSpots[Math.floor(Math.random() * freeSpots.length)];
     }
 }

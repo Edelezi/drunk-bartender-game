@@ -11,7 +11,12 @@ export class GameController {
         this._barModel = new BarModel();
     }
 
+    public get barModel() {
+        return this._barModel;
+    }
+
     private getNextClient(): ClientModel | undefined {
+        console.log("getNextClient");
         if (!this._currentLevel) {
             throw new Error("Level is not set");
         }
@@ -33,12 +38,13 @@ export class GameController {
         while (this._lastClientIndex >= 0) {
             await new Promise(resolve => setTimeout(resolve, getRandomNumber(this._currentLevel?.minGapTime ?? 0, this._currentLevel?.maxGapTime ?? 0) * 1000));
 
+            console.log("Client arrived");
             const nextClient = this.getNextClient();
             if (!nextClient) {
                 return;
             }
 
-            this._barModel.addClient(nextClient, 0);
+            this._barModel.addClient(nextClient, this._barModel.getRandomFreeSpot());
         }
     }
 
@@ -55,6 +61,8 @@ export class GameController {
             throw new Error("No clients in the level");
         }
 
-        this._barModel.addClient(firstClient, 0);
+        this._barModel.addClient(firstClient, this._barModel.getRandomFreeSpot());
+
+        void this.awaitClientArrival(firstClient, 0);
     }
 }
